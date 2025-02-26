@@ -15,5 +15,5 @@ Links:\
 [Video Dropbox](https://ysu-ca.youseeu.com/spa/student/class/640767/assignments/115556?lti-scope=activity)
 
 Sources:\
-(https://www.youtube.com/watch?v=rudzYPHuewc)
+(https://www.youtube.com/watch?v=rudzYPHuewc)\
 (https://www.youtube.com/watch?v=yy6PwbO6chc)
