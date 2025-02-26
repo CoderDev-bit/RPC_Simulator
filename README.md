@@ -13,3 +13,7 @@ Links:\
 [Code Dropbox](https://pdsb.elearningontario.ca/d2l/lms/dropbox/user/folder_submit_files.d2l?ou=26233801&isprv=0&db=37383320&cfql=1)\
 [API Dropbox](https://pdsb.elearningontario.ca/d2l/lms/dropbox/user/folder_submit_files.d2l?ou=26233801&isprv=0&db=37383356&cfql=1)\
 [Video Dropbox](https://ysu-ca.youseeu.com/spa/student/class/640767/assignments/115556?lti-scope=activity)
+
+Sources:\
+(https://www.youtube.com/watch?v=rudzYPHuewc)
+(https://www.youtube.com/watch?v=yy6PwbO6chc)

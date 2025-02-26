@@ -1,1 +1,15 @@
 RPC Strategies:
+Random
+    Equal chance for all choices independent of any other stats
+Intuition
+    1. Winners repeat choices
+    2. Losers choose the unpicked choice next round (or go backwards in S/W Diagram)
+
+Reverse Cycling
+    1. Winners choose the opponents choice next round (or go)
+    2. Losers choose the unpicked choice next round (or go backwards in S/W Diagram)
+
+Tiers choose randomly
+
+*Intuition choices are never absolutely certain (instead more LIKELY). Therefore, I
+likely have to determine the p(w) or r(p(w))
