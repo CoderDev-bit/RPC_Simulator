@@ -7,6 +7,11 @@
             Random (Nash equilibrium)
                 Equal chance for all choices independent of any other stats
             Intuition
+                Men likely to open with rock
+                Women likely to open with scissors
+
+                Not likely to repeat same choice more than 2x (third time they will likely choose what counter to the last move they chose)
+
                 1. Winners repeat choices
                 2. Losers choose the unpicked choice next round (or go backwards in S/W Diagram)
                     /or choose opponents choice (the choice that beat them)
@@ -44,3 +49,7 @@
 }
 -during simulation, at regular intervals, sample of outcomes and RPC choices shown (who won and what were the choices)
 -after game ends, produces detailed report that displays findings of simulation (chosen stats)
+
+https://www.yahoo.com/news/win-rock-paper-scissors-every-161842095.html
+https://www.wikihow.com/Win-at-Rock,-Paper,-Scissors
+https://arstechnica.com/science/2014/05/win-at-rock-paper-scissors-by-knowing-thy-opponent/
