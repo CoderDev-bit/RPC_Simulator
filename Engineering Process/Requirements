@@ -7,8 +7,12 @@
             Random (Nash equilibrium)
                 Equal chance for all choices independent of any other stats
             Intuition
-                Men likely to open with rock
-                Women likely to open with scissors
+
+                Opening Move{
+                    35.4% rock
+                    35.0% paper
+                    29.6% scissors
+                }
 
                 Not likely to repeat same choice more than 2x (third time they will likely choose what counter to the last move they chose)
 
@@ -53,3 +57,4 @@
 https://www.yahoo.com/news/win-rock-paper-scissors-every-161842095.html
 https://www.wikihow.com/Win-at-Rock,-Paper,-Scissors
 https://arstechnica.com/science/2014/05/win-at-rock-paper-scissors-by-knowing-thy-opponent/
+https://www.reddit.com/r/dataisbeautiful/comments/xtnsj3/oc_how_to_mathematically_win_at_rock_paper/?rdt=36630
