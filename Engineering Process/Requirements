@@ -13,3 +13,32 @@ Tiers choose randomly
 
 *Intuition choices are never absolutely certain (instead more LIKELY). Therefore, I
 likely have to determine the p(w) or r(p(w))
+
+The final output should be:
+-a Java GUI program
+-simulation of RPC where
+-before game simulation, user chooses {
+    strategies to be used for each player {
+
+
+    }
+    what statistics they want to see {
+        real-time stats {
+            who won
+            winner choice
+            loser choice
+            # of games played
+        }
+
+        Report {
+            win count,
+            win rate,
+            overall winner,
+            winning and losing streaks,
+            win rate of a specific choice of a specific player
+            # of games played
+        }
+    }
+}
+-during simulation, at regular intervals, sample of outcomes and RPC choices shown (who won and what were the choices)
+-after game ends, produces detailed report that displays findings of simulation (chosen stats)
