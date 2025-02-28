@@ -1,0 +1,73 @@
+-before game simulation, user chooses {
+    strategies to be used for each player {
+        RPC Strategies {
+            Random (Nash equilibrium)
+                Equal chance for all choices independent of any other stats
+
+            Human intuition (Pavlov-based)
+
+                Opening Move{
+                    35.4% rock
+                    35.0% paper
+                    29.6% scissors
+                }
+
+                Not likely to repeat same choice more than 2x (third time they will likely choose what counter to the last move they chose)
+
+                1. Win (repeat most likely)
+                    W0 = 0.57 ± 0.03
+                    W− = 0.20 ± 0.02
+                    W+ = 0.23 ± 0.02
+
+                2. Tie (repeat most likely)
+                    T0 = 0.56 ± 0.03
+                    T− = 0.22 ± 0.02
+                    T+ = 0.22 ± 0.02
+
+                2. Losers choose the unpicked choice next round (or go backwards in S/W Diagram)
+                    /or choose opponents choice (the choice that beat them)
+                    L0 = 0.45 ± 0.03
+                    L− = 0.30 ± 0.02
+                    L+ = 0.25 ± 0.02
+
+            Anti-Pavlov
+                1. Winners choose the opponents choice next round (or go) /choose unpicked choice
+                2. Losers choose the unpicked choice next round (or go backwards in S/W Diagram)
+
+
+            Tiers choose randomly
+
+            *Intuition choices are never absolutely certain (instead more LIKELY). Therefore, I
+            likely have to determine the p(w) or r(p(w))
+        }
+    }
+
+
+    what statistics they want to see {
+        real-time stats {
+            who won
+            winner choice
+            loser choice
+            # of games played
+        }
+
+        Report {
+            win count,
+            win rate,
+            overall winner,
+            winning and losing streaks,
+            win rate of a specific choice of a specific player
+            # of games played
+        }
+
+    }
+}
+
+-during simulation, at regular intervals, sample of outcomes and RPC choices shown (who won and what were the choices)
+-after game ends, produces detailed report that displays findings of simulation (chosen stats)
+
+https://www.reddit.com/r/dataisbeautiful/comments/xtnsj3/oc_how_to_mathematically_win_at_rock_paper/?rdt=36630
+https://arxiv.org/pdf/1404.5199v1
+https://www.cmu.edu/dietrich/sds/ddmlab/papers/ZhangMoisanGonzalez2020.pdf
+
+Limit of number of trials based on the limits of the hardware
