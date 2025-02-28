@@ -1,11 +1,10 @@
-GUI Sketch:
-
+GUI DESIGN
 https://lucid.app/lucidchart/321d3b8a-5a22-4e96-aa6e-6327fc7195a7/edit?viewport_loc=-11%2C-10%2C1705%2C853%2C0_0&invitationId=inv_eb494aa2-3f3c-472c-a095-0dc5d2b11d80
 
-Rock, Paper, Scissors Strength/Weakness diagram:
-
+RPS Strength/Weakness diagram:
 https://en.wikipedia.org/wiki/Rock_paper_scissors#/media/File:Rock-paper-scissors.svg
 
+ALGORITHM
 Before game simulation, user chooses strategies to be used for each player {
         RPC Strategies {
             Random (Nash equilibrium)
@@ -70,11 +69,16 @@ Before game simulation, user chooses strategies to be used for each player {
     }
 }
 
--during simulation, at regular intervals, sample of outcomes and RPC choices shown (who won and what were the choices)
--after game ends, produces detailed report that displays findings of simulation (chosen stats)
+during simulation, at regular intervals, sample of outcomes and RPC choices shown (who won and what were the choices)
+after game ends, produces detailed report that displays findings of simulation (chosen stats)
+Limit of number of trials based on the limits of the hardware
 
+PSEUDOCODE:
+
+
+
+SOURCES:
 https://www.reddit.com/r/dataisbeautiful/comments/xtnsj3/oc_how_to_mathematically_win_at_rock_paper/?rdt=36630
 https://arxiv.org/pdf/1404.5199v1
 https://www.cmu.edu/dietrich/sds/ddmlab/papers/ZhangMoisanGonzalez2020.pdf
 
-Limit of number of trials based on the limits of the hardware
