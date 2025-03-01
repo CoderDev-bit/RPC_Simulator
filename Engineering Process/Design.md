@@ -12,18 +12,18 @@ When algorithm is run...
 
 If user proceeds...
 1. A new test of type "Game" is created
-2. User is allowed to configure the test (default configs are shown)
+2. User is allowed to configure the test via GUI (default configs are shown)
     [Experimental]
         Duration: Endless/Ending
         Stop when: # of trials reached;(only if ending is selected)
+        *Limit of number of trials based on the limits of the hardware
     [Game]
         Player A Strategy
         Player B Strategy
     [Data]
         Real-time
             who won
-            winner choice
-            loser choice
+            player choices
             # of games played
         Report
             win count,
@@ -33,16 +33,25 @@ If user proceeds...
             win rate of a specific choice of a specific player,
             # of games played,
             % of RPC used for each player (this is not theoretical probability because...)
-3. User starts test/quits
+3. User starts test/goes back/quits
 
 If user starts test...
-1. 
+1. RPS Animation IN
+2. Update Real-time stats
+3. RPS Animation OUT
+4. Loop until end condition is true OR User ends test
+
+If user ends test...
+1. Show all stats he requested in Test configuration
+2. User may retest or quit
+
+If user quits...
+1. Exit the program
 
 ALGORITHM (FLOWCHART):
 
-Before game simulation, user chooses strategies to be used for each player {
-        RPC Strategies {
-            Random (Nash equilibrium)
+RPC Strategies
+    Random (Nash equilibrium)
                 Equal chance for all choices independent of any other stats
 
             Human intuition (Pavlov-based)
@@ -95,10 +104,6 @@ Before game simulation, user chooses strategies to be used for each player {
 
     }
 }
-
-during simulation, at regular intervals, sample of outcomes and RPC choices shown (who won and what were the choices)
-after game ends, produces detailed report that displays findings of simulation (chosen stats)
-Limit of number of trials based on the limits of the hardware
 
 PSEUDOCODE:
 
