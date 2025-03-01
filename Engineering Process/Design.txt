@@ -36,7 +36,7 @@ If user proceeds...
 3. User starts test/quits
 
 If user starts test...
-1.
+1. 
 
 ALGORITHM (FLOWCHART):
 
