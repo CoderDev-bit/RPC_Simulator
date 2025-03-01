@@ -6,13 +6,37 @@ https://en.wikipedia.org/wiki/Rock_paper_scissors#/media/File:Rock-paper-scissor
 
 ALGORITHM (PROCEDURE):
 When algorithm is run...
-1. User selects a "Game" to test
+1. User selects a "Game" to test from dropdown (combobox)
 2. User is allowed to proceed
-3. User proceeds or quits
+3. User proceeds/quits
 
 If user proceeds...
 1. A new test of type "Game" is created
-2.
+2. User is allowed to configure the test (default configs are shown)
+    [Experimental]
+        Duration: Endless/Ending
+        Stop when: # of trials reached;(only if ending is selected)
+    [Game]
+        Player A Strategy
+        Player B Strategy
+    [Data]
+        Real-time
+            who won
+            winner choice
+            loser choice
+            # of games played
+        Report
+            win count,
+            win rate,
+            overall winner,
+            winning and losing streaks,
+            win rate of a specific choice of a specific player,
+            # of games played,
+            % of RPC used for each player (this is not theoretical probability because...)
+3. User starts test/quits
+
+If user starts test...
+1.
 
 ALGORITHM (FLOWCHART):
 
@@ -62,20 +86,11 @@ Before game simulation, user chooses strategies to be used for each player {
 
     what statistics they want to see {
         real-time stats {
-            who won
-            winner choice
-            loser choice
-            # of games played
+
         }
 
         Report {
-            win count,
-            win rate,
-            overall winner,
-            winning and losing streaks,
-            win rate of a specific choice of a specific player,
-            # of games played,
-            % of RPC used for each player (this is not theoretical probability because...)
+
         }
 
     }
