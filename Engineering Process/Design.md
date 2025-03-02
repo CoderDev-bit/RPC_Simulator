@@ -28,7 +28,7 @@ If user proceeds...
             Player win rate,
             Overall winner,
             winning and losing streaks,
-            win rate of a specific choice of a specific player,
+            win rate of choices of players (eg. Player A Rock 50%),
             # of games played,
             % of RPC used for each player (this is not theoretical probability because...)
 3. User starts test/goes back/quits
@@ -50,8 +50,8 @@ ALGORITHM (FLOWCHART):
 
 
 RPC STRATEGIES:
-Perfect Random (Nash equilibrium)
-    Equal chance for all choices independent of any other stats (about 33.33%)
+Perfect Random
+    Equal chance for all choices independent of any other stats (1/3)
 
 Human Intuition (Pavlov-based)
 
@@ -73,7 +73,6 @@ Human Intuition (Pavlov-based)
        T+ = 0.22 ± 0.02
 
    3. Losers choose the unpicked choice next round (or go backwards in S/W Diagram)
-       /or choose opponents choice (the choice that beat them)
        L0 = 0.45 ± 0.03
        L− = 0.30 ± 0.02
        L+ = 0.25 ± 0.02
