@@ -14,19 +14,19 @@
 
 
 #### **2. Configuration**
-1. Create a new test object.
-2. Display configuration options:
-    - **Experimental Settings**:
+1. Create a new object type RPS which extends Test.
+2. Display configuration options in pnlConfig:
+    - **Experimental**:
         - **Radio Buttons**: "Endless" / "Ending".
-        - If "Ending" selected, enable **input field** for trial count.
-    - **Game Settings**:
-        - **Dropdowns** for **Player A Strategy** and **Player B Strategy**.
-    - **Data Settings**:
-        - **Checkboxes** for real-time statistics (who won, choices, games played).
-        - **Checkboxes** for report statistics (win count, streaks, usage rates, etc.).
+        - If "Ending" selected, enable **text field** for trial count.
+    - **Game**:
+        - **2 Dropdowns** for **Player A Strategy** and **Player B Strategy**.
+    - **Data**:
+        - **Checkboxes** for real-time stats (who won, choices, games played).
+        - **Checkboxes** for report stats (win count, streaks, usage rates, etc.).
 3. Display **Start Test**, **Back**, and **Quit** buttons.
-4. If **Start Test** clicked, validate settings and proceed to **Simulation**.
-5. If **Back** clicked, return to **Main Screen**.
+4. If **Start Test** clicked, validate settings and proceed to **3. Simulation**.
+5. If **Back** clicked, return to **1. Initialization**.
 6. If **Quit** clicked, exit the program.
 
 
@@ -34,19 +34,18 @@
 1. Initialize all counters and stats.
 2. While stop condition is **false**:
     1. Determine **Player A** and **Player B** moves based on their selected strategy.
-    2. Compare moves to determine **winner, loser, or tie**.
-    3. Update statistics:
+    2. Compare moves to determine the **winner, loser, or tiers**.
+    3. Update enabled real time and report statistics:
         - **Win count, win rate, streaks, RPC usage, total games played**.
-    4. Update **real-time stats display** (if enabled).
-    5. Update **win rate bar animation**.
-    6. If stop condition met or user ends test, break loop.
-3. When loop ends, proceed to **Report**.
+    4. Update **win rate bar animation**.
+    5. If stop condition met or user ends test, break loop.
+3. When loop ends, proceed to **4. Report**.
 
 
 #### **4. Display Report**
-1. Show a table with:
-    - Two columns (Player A, Player B).
-    - Rows for each selected statistic.
+1. Display pnlReport and show a table with:
+    - Constant two columns (Player A, Player B).
+    - Variable rows for each selected report statistic.
 2. Display **Retest** and **Quit** buttons.
 3. If **Retest** clicked, return to **Configuration**.
 4. If **Quit** clicked, exit the program.
@@ -87,8 +86,23 @@ Against Intuition (Anti-Pavlov)
 Adaptive
     Start with Nash Equilibrium and adjust probabilities based on opponent's frequent moves
 
-PSEUDOCODE:
 
+PSEUDOCODE:
+_class main_
+declare and initialize GUI object
+objGUI.initializeGUI()
+
+_class GUI_
+import java swing
+global/fields 
+    frmMain,
+    pnlMain, pnlConfig, pnlSimulate, pnlReport
+    btnA, btnB, btnExit
+    
+
+_class test_
+
+_class RPS_
 
 
 SOURCES:
