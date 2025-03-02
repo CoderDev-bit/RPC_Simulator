@@ -98,6 +98,26 @@ global/fields
     frmMain,
     pnlMain, pnlConfig, pnlSimulate, pnlReport
     btnA, btnB, btnExit
+    lblTitle
+
+initializeGUI()
+    frmMain add pnlMain
+    pnlMain add lblTitle("GameTest™"), btnA("Proceed") and btnExit
+    btnA addActionListener for click -> proceed()
+    btnExit addActionListener for click -> System.exit(0)
+
+//Event handlers
+proceed()
+
+goBack()
+
+start()
+
+pause()
+
+end()
+
+restart()
     
 
 _class test_
