@@ -2,59 +2,69 @@
 
 [RPS S/W DIAGRAM](https://en.wikipedia.org/wiki/Rock_paper_scissors#/media/File:Rock-paper-scissors.svg)
 
-ALGORITHM (PROCEDURE):
-When algorithm is run...
-1. User selects a "Game" to test from dropdown (combobox)
-2. User is allowed to proceed
-3. User proceeds/quits
+### **ALGORITHM (PROCEDURE):**
 
-If user proceeds...
-1. A new test of type "Game" is created
-2. User is allowed to configure the test via GUI (default configs are shown)
-    [Experimental]
-        Duration: Endless/Ending
-        Stop when: # of trials reached; (only if ending is selected)
-        *Limit of number of trials based on the limits of the hardware
-    [Game]
-        Player A Strategy
-        Player B Strategy
-    [Data]
-        Real-time
-            who won
-            player choices
-            # of games played
-        Report
-            Player win count,
-            Player win rate,
-            Overall winner,
-            winning and losing streaks,
-            win rate of choices of players (eg. Player A Rock 50%),
-            # of games played,
-            % of RPC used for each player (this is not theoretical probability because...)
-3. User starts test/goes back/quits
+#### **1. Initialization**
+1. Display main screen (frmMain and pnlMain) with:
+    - **Dropdown (JComboBox)** to select a game.
+    - **Proceed** and **Quit** buttons.
+2. If a game is selected, enable **Proceed**.
+3. If **Proceed** is clicked, go to **2. Configuration**.
+4. If **Quit** is clicked, exit the program.
 
-If user starts test...
-1. RPS Animation IN
-2. Update Real-time stats
-3. RPS Animation OUT
-4. Loop until stop condition is true OR User ends test
 
-If user ends test...
-1. Show all stats he requested in Test configuration
-2. User may retest or quit
+#### **2. Configuration**
+1. Create a new test object.
+2. Display configuration options:
+    - **Experimental Settings**:
+        - **Radio Buttons**: "Endless" / "Ending".
+        - If "Ending" selected, enable **input field** for trial count.
+    - **Game Settings**:
+        - **Dropdowns** for **Player A Strategy** and **Player B Strategy**.
+    - **Data Settings**:
+        - **Checkboxes** for real-time statistics (who won, choices, games played).
+        - **Checkboxes** for report statistics (win count, streaks, usage rates, etc.).
+3. Display **Start Test**, **Back**, and **Quit** buttons.
+4. If **Start Test** clicked, validate settings and proceed to **Simulation**.
+5. If **Back** clicked, return to **Main Screen**.
+6. If **Quit** clicked, exit the program.
 
-If user quits...
-1. Exit the program
+
+#### **3. Simulation Loop**
+1. Initialize all counters and stats.
+2. While stop condition is **false**:
+    1. Determine **Player A** and **Player B** moves based on their selected strategy.
+    2. Compare moves to determine **winner, loser, or tie**.
+    3. Update statistics:
+        - **Win count, win rate, streaks, RPC usage, total games played**.
+    4. Update **real-time stats display** (if enabled).
+    5. Update **win rate bar animation**.
+    6. If stop condition met or user ends test, break loop.
+3. When loop ends, proceed to **Report**.
+
+
+#### **4. Display Report**
+1. Show a table with:
+    - Two columns (Player A, Player B).
+    - Rows for each selected statistic.
+2. Display **Retest** and **Quit** buttons.
+3. If **Retest** clicked, return to **Configuration**.
+4. If **Quit** clicked, exit the program.
+
+
+#### **5. Exit**
+1. If **Quit** is clicked from any screen, terminate the program safely.
+
 
 ALGORITHM (FLOWCHART):
 
 
 RPC STRATEGIES:
-Perfect Random
+
+Perfect Random (Nash equilibrium)
     Equal chance for all choices independent of any other stats (1/3)
 
 Human Intuition (Pavlov-based)
-
     Opening Move
         35.4% rock
         35.0% paper
@@ -62,30 +72,20 @@ Human Intuition (Pavlov-based)
 
     Not likely to repeat same choice more than 2x (third time they will likely choose what counter to the last move they chose)
 
-    1. Win (repeat most likely)
-        W0 = 0.57 ± 0.03
-        W− = 0.20 ± 0.02
-        W+ = 0.23 ± 0.02
-
-   2. Tie (repeat most likely)
-       T0 = 0.56 ± 0.03
-       T− = 0.22 ± 0.02
-       T+ = 0.22 ± 0.02
-
-   3. Losers choose the unpicked choice next round (or go backwards in S/W Diagram)
-       L0 = 0.45 ± 0.03
-       L− = 0.30 ± 0.02
-       L+ = 0.25 ± 0.02
+    1. Win (likely to repeat choice)
+    2. Tie (likely to choose random choice)
+    3. Lose (likely to choose counter to opponent's choice/choose unpicked choice/shift)
 
 Against Intuition (Anti-Pavlov)
-    1. Winners choose the opponents choice next round (or go) /choose unpicked choice
-    2. Losers choose the unpicked choice next round (or go backwards in S/W Diagram)
-
-    Tiers choose randomly
+    1. Win (choose counter to counter of your choice/choose opponent's choice/shift)
+    2. Tie (choose random choice)
+    3. Lose (choose counter to opponents choice/unpicked choice/shift)
 
     *Intuition choices are never absolutely certain (instead more LIKELY). Therefore, I
     likely have to determine the p(w) or r(p(w))
 
+Adaptive
+    Start with Nash Equilibrium and adjust probabilities based on opponent's frequent moves
 
 PSEUDOCODE:
 
