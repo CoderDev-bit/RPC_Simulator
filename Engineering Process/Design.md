@@ -98,16 +98,28 @@ global/fields
     frmMain,
     pnlMain, pnlConfig, pnlSimulate, pnlReport
     btnA, btnB, btnExit
-    lblTitle
+    comboBoxA, comboBoxB
+    radiobtnEndless, radiobtnEnding
+    2D array of checkboxes
+    tblReport
+    lblTitle, lblDuration, lblTrials, lblA, lblB, lblReal, lblReport
 
 initializeGUI()
     frmMain add pnlMain
-    pnlMain add lblTitle("GameTest™"), btnA("Proceed") and btnExit
+    pnlMain add lblTitle("GameTest™"), btnA("Proceed", disabled), comboBoxA("RPS") and btnExit("Exit")
+    comboBoxA addActionListener for selectionOfItem -> enable btnA
     btnA addActionListener for click -> proceed()
     btnExit addActionListener for click -> System.exit(0)
 
 //Event handlers
 proceed()
+    hide pnlMain
+    pnlConfig add lblTitle("Config"), btnA("Start"), btnB("Go Back"), all checkboxes in array
+    btnA addActionListener for click -> start()
+    btnB addActionListener for click -> goBack()
+    btnExit addActionListener for click -> System.exit(0)
+
+    
 
 goBack()
 
