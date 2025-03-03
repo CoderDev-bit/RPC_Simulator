@@ -5,8 +5,8 @@
 ### **ALGORITHM (PROCEDURE):**
 
 #### **1. Initialization**
-1. Display main screen (frmMain and pnlMain) with:
-    - **Dropdown (JComboBox)** to select a game.
+1. Display main screen (frmMain displays pnlMain) with:
+    - **Dropdown (JComboBox)** to select a game. (RPS only)
     - **Proceed** and **Quit** buttons.
 2. If a game is selected, enable **Proceed**.
 3. If **Proceed** is clicked, go to **2. Configuration**.
@@ -36,10 +36,10 @@
     1. Determine **Player A** and **Player B** moves based on their selected strategy.
     2. Compare moves to determine the **winner, loser, or tiers**.
     3. Update enabled real time and report statistics:
-        - **Win count, win rate, streaks, RPC usage, total games played**.
-    4. Update **win rate bar animation**.
+    4. Update **win rate bar animation (JProgressbar) (only supports int values so round double win rate to int)**.
     5. If stop condition met or user ends test, break loop.
 3. When loop ends, proceed to **4. Report**.
+4. There should be text field and a button to set speed of trials (# of delay between trials from 1 ms to max 1 sec)
 
 
 #### **4. Display Report**
@@ -53,10 +53,6 @@
 
 #### **5. Exit**
 1. If **Quit** is clicked from any screen, terminate the program safely.
-
-
-ALGORITHM (FLOWCHART):
-
 
 RPC STRATEGIES:
 
@@ -80,11 +76,10 @@ Against Intuition (Anti-Pavlov)
     2. Tie (choose random choice)
     3. Lose (choose counter to opponents choice/unpicked choice/shift)
 
-    *Intuition choices are never absolutely certain (instead more LIKELY). Therefore, I
-    likely have to determine the p(w) or r(p(w))
-
 Adaptive
-    Start with Nash Equilibrium and adjust probabilities based on opponent's frequent moves
+    Start with Nash Equilibrium and adjust probabilities based on opponent's moves. Initially, all of opponent's choices
+    should have a count of 1 (therefore, 1/3 equal probability for all choices). Each subsequent trial,
+    update counters and calculate the most likely move from the opponent. Then, choose the counter to that move.
 
 
 PSEUDOCODE:
@@ -141,4 +136,4 @@ SOURCES:
 https://www.reddit.com/r/dataisbeautiful/comments/xtnsj3/oc_how_to_mathematically_win_at_rock_paper/?rdt=36630
 https://arxiv.org/pdf/1404.5199v1
 https://www.cmu.edu/dietrich/sds/ddmlab/papers/ZhangMoisanGonzalez2020.pdf
-
+https://medium.com/ground-state-curiosity/how-to-probably-win-at-rock-paper-scissors-172aa3e768a8
