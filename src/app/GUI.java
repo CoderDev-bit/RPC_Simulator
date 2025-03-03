@@ -6,13 +6,13 @@ import java.awt.*;
 public class GUI {
 
     JFrame frmMain;
-    final int FRAME_WIDTH = 500, FRAME_HEIGHT = 350;
+    final int FRAME_WIDTH = 550, FRAME_HEIGHT = 450;
     JCheckBox[][] arrCkStats;
     JPanel pnlMain, pnlConfig, pnlSimulation, pnlReport;
     JButton btnA, btnB, btnExit;
     JComboBox<String> cbA, cbB;
     JRadioButton rbEndless, rbEnding;
-    JLabel lblTitle, lblRealTime, lblReport, lblA, lblB, lblDuration, lblStats;
+    JLabel lblTitle, lblRealTime, lblReport, lblA, lblB, lblDuration, lblStats, lblTrials;
     JTextField txtTrials;
     JProgressBar pbWinRates;
     Timer tmrWinRates;
@@ -87,8 +87,8 @@ public class GUI {
 
         arrCkStats = new JCheckBox[2][];
         arrCkStats[0] = new JCheckBox[2];
-        arrCkStats[1] = new JCheckBox[4];
-        String[] arrStatNames = {"Immediate Winner", "Player Choices", "Overall Winner", "Choice Win Rate", "Choice Pick Rate", "Streaks"};
+        arrCkStats[1] = new JCheckBox[5];
+        String[] arrStatNames = {"Immediate Winner", "Player Choices", "Overall Winner", "Choice Win Rate", "Choice Pick Rate", "Tie Rate", "Streaks"};
 
         int i = 0;
         for (int row = 0; row < arrCkStats.length; row++) {
@@ -181,6 +181,9 @@ public class GUI {
         pnlSimulation.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 
         lblTitle.setText("<html><h1>Simulation</h1></html>");
+        lblA.setText("Player A");
+        lblB.setText("Player B");
+        lblTrials = new JLabel("0");
         pbWinRates = new JProgressBar();
 
         int i = 10;
@@ -191,13 +194,16 @@ public class GUI {
         });
 
         lblTitle.setBounds(100, 5, 300, 30);
-        pbWinRates.setBounds(100, 200, 300, 30);
-
-
+        lblB.setBounds(450,180,100,30);
+        lblA.setBounds(40,180,100,30);
+        lblTrials.setBounds(200,200,100,30);
+        pbWinRates.setBounds(125, 180, 300, 30);
 
         pnlSimulation.add(lblTitle);
+        pnlSimulation.add(lblA);
+        pnlSimulation.add(lblB);
+        pnlSimulation.add(lblTrials);
         pnlSimulation.add(pbWinRates);
-
 
     }
 }
