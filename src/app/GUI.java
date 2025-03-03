@@ -6,8 +6,9 @@ import java.awt.*;
 public class GUI {
 
     JFrame frmMain;
+    final int FRAME_WIDTH = 500, FRAME_HEIGHT = 350;
     JCheckBox[][] arrCkStats;
-    JPanel pnlMain, pnlConfig;
+    JPanel pnlMain, pnlConfig, pnlSimulation, pnlReport;
     JButton btnA, btnB, btnExit;
     JComboBox<String> cbA, cbB;
     JRadioButton rbEndless, rbEnding;
@@ -18,7 +19,7 @@ public class GUI {
     void initGUI() {
         frmMain = new JFrame("GameTest™");
         frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frmMain.setBounds(10, 10, 500, 350);
+        frmMain.setBounds(10, 10, FRAME_WIDTH, FRAME_HEIGHT);
 
         initMainPanel();
 
@@ -53,7 +54,6 @@ public class GUI {
 
     void proceed() {
         if (cbA.getSelectedItem().equals("RPS")) {
-            objRPS = new RPS();
             initConfigPanel();
             frmMain.remove(pnlMain);
             frmMain.add(pnlConfig);
@@ -65,13 +65,13 @@ public class GUI {
     void initConfigPanel() {
         pnlConfig = new JPanel();
         pnlConfig.setLayout(null);
-        pnlConfig.setBounds(0, 0, 500, 350);
+        pnlConfig.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 
         lblTitle.setText("<html><h1>Configuration</h1></html>");
-        lblRealTime = new JLabel("Real Time");
-        lblReport = new JLabel("Report");
-        lblA = new JLabel("Player A Strategy");
-        lblB = new JLabel("Player B Strategy");
+        lblRealTime = new JLabel("<html><i>Real Time</i></html>");
+        lblReport = new JLabel("<html><i>Report</i></html>");
+        lblA = new JLabel("<html><i>Player A Strategy</html></i>");
+        lblB = new JLabel("<html><i>Player B Strategy</html></i>");
         lblDuration = new JLabel("<html><h3>DURATION:</h3></html>");
         lblStats = new JLabel("<html><h3>STATS:</h3></html>");
         rbEndless = new JRadioButton("Endless");
@@ -99,8 +99,8 @@ public class GUI {
         }
 
         lblTitle.setBounds(100, 5, 300, 30);
-        lblRealTime.setBounds(300, 300, 100, 30);
-        lblReport.setBounds(300, 350, 100, 30);
+        lblRealTime.setBounds(30, 205, 100, 30);
+        lblReport.setBounds(30, 280, 100, 30);
         lblA.setBounds(300, 70, 100, 30);
         lblB.setBounds(300, 150, 100, 30);
         lblDuration.setBounds(100, 75, 100, 30);
@@ -110,6 +110,8 @@ public class GUI {
         cbA.setBounds(300, 100, 100, 30);
         cbB.setBounds(300, 180, 100, 30);
         txtTrials.setBounds(100, 130, 100, 30);
+        btnA.setBounds(300, 230, 100, 30);
+        btnB.setBounds(300, 270, 100, 30);
 
 
 
@@ -125,6 +127,27 @@ public class GUI {
 
             rbEndless.setSelected(false);
             txtTrials.setVisible(true);
+
+        });
+
+        btnA.addActionListener(e -> {
+
+            initSimulationPanel();
+            objRPS = new RPS();
+            frmMain.remove(pnlConfig);
+            frmMain.add(pnlSimulation);
+            frmMain.revalidate();
+            frmMain.repaint();
+
+        });
+
+        btnB.addActionListener(e -> {
+
+            initMainPanel();
+            frmMain.remove(pnlConfig);
+            frmMain.add(pnlMain);
+            frmMain.revalidate();
+            frmMain.repaint();
 
         });
 
@@ -146,6 +169,20 @@ public class GUI {
         pnlConfig.add(txtTrials);
         pnlConfig.add(btnA);
         pnlConfig.add(btnB);
+
+    }
+
+    void initSimulationPanel() {
+
+        pnlSimulation = new JPanel();
+        pnlSimulation.setLayout(null);
+        pnlSimulation.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+
+        lblTitle.setText("<html><h1>Simulation</h1></html>");
+
+        lblTitle.setBounds(100, 5, 300, 30);
+
+        pnlSimulation.add(lblTitle);
 
     }
 }
