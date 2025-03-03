@@ -129,6 +129,7 @@ public class GUI {
 
             rbEndless.setSelected(false);
             txtTrials.setVisible(true);
+            txtTrials.setText("# of trials");
 
         });
 
@@ -136,18 +137,31 @@ public class GUI {
 
             try {
                 IntStopAtTrial = Integer.parseInt(txtTrials.getText());
+                if (IntStopAtTrial <= 0) {
+                    throw new NumberFormatException();
+                }
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(pnlConfig, "Invalid number of trials");
-                return;
+                if (txtTrials.getText().equals("")) {IntStopAtTrial = null;}
+                else {
+                    JOptionPane.showMessageDialog(pnlConfig, "Invalid number of trials");
+                    return;
+                }
             }
 
             initSimulationPanel();
             objTest = new Test();
             objTest.construct(strGame,rbEndless.isSelected(),IntStopAtTrial);
+
             frmMain.remove(pnlConfig);
             frmMain.add(pnlSimulation);
             frmMain.revalidate();
             frmMain.repaint();
+
+            tmrWinRates = new Timer(1000, e1 -> {
+
+                Test.objGame.simulateMove();
+
+            })
 
         });
 
@@ -163,7 +177,7 @@ public class GUI {
 
         rbEndless.setSelected(true);
         txtTrials.setVisible(false);
-        txtTrials.setText("# of trials");
+        txtTrials.setText("");
 
         pnlConfig.add(rbEndless);
         pnlConfig.add(rbEnding);
@@ -193,13 +207,6 @@ public class GUI {
         lblB.setText("Player B");
         lblTrials = new JLabel("0");
         pbWinRates = new JProgressBar();
-
-        int i = 10;
-        tmrWinRates = new Timer(1000, e -> {
-
-            pbWinRates.setValue(i);
-
-        });
 
         lblTitle.setBounds(100, 5, 300, 30);
         lblB.setBounds(450,180,100,30);
