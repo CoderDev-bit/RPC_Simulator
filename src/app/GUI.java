@@ -117,13 +117,11 @@ public class GUI {
         btnA.setBounds(300, 230, 100, 30);
         btnB.setBounds(300, 270, 100, 30);
 
-
-
-
         rbEndless.addActionListener(e -> {
 
             rbEnding.setSelected(false);
             txtTrials.setVisible(false);
+            txtTrials.setText("");
 
         });
 
