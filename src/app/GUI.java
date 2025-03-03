@@ -1,7 +1,6 @@
 package app;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class GUI {
 
@@ -16,7 +15,9 @@ public class GUI {
     JTextField txtTrials;
     JProgressBar pbWinRates;
     Timer tmrWinRates;
-    RPS objRPS;
+    Test objTest;
+    Integer IntStopAtTrial;
+    String strGame;
 
     void initGUI() {
         frmMain = new JFrame("GameTest™");
@@ -57,6 +58,7 @@ public class GUI {
     void proceed() {
         if (cbA.getSelectedItem().equals("RPS")) {
             initConfigPanel();
+            strGame = cbA.getSelectedItem() + "";
             frmMain.remove(pnlMain);
             frmMain.add(pnlConfig);
             frmMain.revalidate();
@@ -134,8 +136,16 @@ public class GUI {
 
         btnA.addActionListener(e -> {
 
+            try {
+                IntStopAtTrial = Integer.parseInt(txtTrials.getText());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(pnlConfig, "Invalid number of trials");
+                return;
+            }
+
             initSimulationPanel();
-            objRPS = new RPS();
+            objTest = new Test();
+            objTest.construct(strGame,rbEndless.isSelected(),IntStopAtTrial);
             frmMain.remove(pnlConfig);
             frmMain.add(pnlSimulation);
             frmMain.revalidate();
