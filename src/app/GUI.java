@@ -11,7 +11,7 @@ public class GUI {
     JButton btnA, btnB, btnExit;
     JComboBox<String> cbA, cbB;
     JRadioButton rbEndless, rbEnding;
-    JLabel lblTitle, lblRealTime, lblReport, lblA, lblB;
+    JLabel lblTitle, lblRealTime, lblReport, lblA, lblB, lblDuration, lblStats;
     JTextField txtTrials;
     RPS objRPS;
 
@@ -72,6 +72,8 @@ public class GUI {
         lblReport = new JLabel("Report");
         lblA = new JLabel("Player A Strategy");
         lblB = new JLabel("Player B Strategy");
+        lblDuration = new JLabel("<html><h3>DURATION:</h3></html>");
+        lblStats = new JLabel("<html><h3>STATS:</h3></html>");
         rbEndless = new JRadioButton("Endless");
         rbEnding = new JRadioButton("Ending");
         cbA = new JComboBox(new String[]{"Random", "Human", "Against Human", "Adaptive"});
@@ -90,7 +92,7 @@ public class GUI {
         for (int row = 0; row < arrCkStats.length; row++) {
             for (int col = 0; col < arrCkStats[row].length; col++) {
                 arrCkStats[row][col] = new JCheckBox(arrStatNames[i]);
-                arrCkStats[row][col].setBounds(100, 150 + (row * 30) + (col * 30), 200, 30);
+                arrCkStats[row][col].setBounds(100, 190 + (row * 30) + (col * 30), 200, 30);
                 pnlConfig.add(arrCkStats[row][col]);
                 i++;
             }
@@ -101,11 +103,13 @@ public class GUI {
         lblReport.setBounds(300, 350, 100, 30);
         lblA.setBounds(300, 70, 100, 30);
         lblB.setBounds(300, 150, 100, 30);
+        lblDuration.setBounds(100, 75, 100, 30);
+        lblStats.setBounds(100, 165, 100, 30);
         rbEndless.setBounds(100, 100, 100, 30);
         rbEnding.setBounds(200, 100, 100, 30);
         cbA.setBounds(300, 100, 100, 30);
         cbB.setBounds(300, 180, 100, 30);
-        txtTrials.setBounds(300, 260, 100, 30);
+        txtTrials.setBounds(100, 130, 100, 30);
 
 
 
@@ -137,6 +141,8 @@ public class GUI {
         pnlConfig.add(lblReport);
         pnlConfig.add(lblA);
         pnlConfig.add(lblB);
+        pnlConfig.add(lblDuration);
+        pnlConfig.add(lblStats);
         pnlConfig.add(txtTrials);
         pnlConfig.add(btnA);
         pnlConfig.add(btnB);
