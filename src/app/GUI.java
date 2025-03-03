@@ -15,7 +15,7 @@ public class GUI {
     JTextField txtTrials;
     JProgressBar pbWinRates;
     Timer tmrWinRates;
-    Test objTest;
+    RPS objTest;
     Integer IntStopAtTrial;
     String strGame;
 
@@ -149,8 +149,7 @@ public class GUI {
             }
 
             initSimulationPanel();
-            objTest = new Test();
-            objTest.construct(strGame,rbEndless.isSelected(),IntStopAtTrial);
+            objTest = new RPS();
 
             frmMain.remove(pnlConfig);
             frmMain.add(pnlSimulation);
@@ -159,9 +158,9 @@ public class GUI {
 
             tmrWinRates = new Timer(1000, e1 -> {
 
-                Test.objGame.simulateMove();
+                objTest.simulateTrial();
 
-            })
+            });
 
         });
 

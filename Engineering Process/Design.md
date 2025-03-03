@@ -54,7 +54,7 @@
 #### **5. Exit**
 1. If **Quit** is clicked from any screen, terminate the program safely.
 
-RPC STRATEGIES:
+RPS STRATEGIES:
 
 Perfect Random (Nash equilibrium)
     Equal chance for all choices independent of any other stats (1/3)
