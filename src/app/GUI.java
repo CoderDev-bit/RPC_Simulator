@@ -14,6 +14,8 @@ public class GUI {
     JRadioButton rbEndless, rbEnding;
     JLabel lblTitle, lblRealTime, lblReport, lblA, lblB, lblDuration, lblStats;
     JTextField txtTrials;
+    JProgressBar pbWinRates;
+    Timer tmrWinRates;
     RPS objRPS;
 
     void initGUI() {
@@ -179,10 +181,23 @@ public class GUI {
         pnlSimulation.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 
         lblTitle.setText("<html><h1>Simulation</h1></html>");
+        pbWinRates = new JProgressBar();
+
+        int i = 10;
+        tmrWinRates = new Timer(1000, e -> {
+
+            pbWinRates.setValue(i);
+
+        });
 
         lblTitle.setBounds(100, 5, 300, 30);
+        pbWinRates.setBounds(100, 200, 300, 30);
+
+
 
         pnlSimulation.add(lblTitle);
+        pnlSimulation.add(pbWinRates);
+
 
     }
 }
