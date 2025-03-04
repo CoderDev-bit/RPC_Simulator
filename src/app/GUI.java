@@ -13,7 +13,7 @@ public class GUI {
     JPanel pnlConfig, pnlSimulation, pnlReport;
     JButton btnStart, btnExit, btnEndTest;
     JComboBox<String> cbA, cbB;
-    JLabel lblTitle, lblRealTime, lblReport, lblA, lblB, lblDuration, lblStats, lblTrials, lblResultA, lblResultB, lblMoveA, lblMoveB, lblWinRateA, lblWinRateB;
+    JLabel lblTitle, lblRealTime, lblReport, lblA, lblB, lblStats, lblTrials, lblResultA, lblResultB, lblMoveA, lblMoveB, lblWinRateA, lblWinRateB;
     JTextField txtTrials;
     JProgressBar pbWinRates;
     JTable tblStats;
@@ -42,7 +42,6 @@ public class GUI {
         lblReport = new JLabel("<html><i>Report</i></html>");
         lblA = new JLabel("<html><i>Player A Strategy</html></i>");
         lblB = new JLabel("<html><i>Player B Strategy</html></i>");
-        lblDuration = new JLabel("<html><h3>DURATION:</h3></html>");
         lblStats = new JLabel("<html><h3>STATS:</h3></html>");
         cbA = new JComboBox<>(new String[]{"Random", "Human", "Against Human", "Adaptive"});
         cbB = new JComboBox<>(new String[]{"Random", "Human", "Against Human", "Adaptive"});
@@ -71,7 +70,6 @@ public class GUI {
         lblReport.setBounds(30, 255, 100, 30);
         lblA.setBounds(300, 70, 100, 30);
         lblB.setBounds(300, 150, 100, 30);
-        lblDuration.setBounds(100, 75, 100, 30);
         lblStats.setBounds(100, 165, 100, 30);
         cbA.setBounds(300, 100, 100, 30);
         cbB.setBounds(300, 180, 100, 30);
@@ -140,7 +138,6 @@ public class GUI {
         pnlConfig.add(lblReport);
         pnlConfig.add(lblA);
         pnlConfig.add(lblB);
-        pnlConfig.add(lblDuration);
         pnlConfig.add(lblStats);
         pnlConfig.add(txtTrials);
         pnlConfig.add(btnStart);
