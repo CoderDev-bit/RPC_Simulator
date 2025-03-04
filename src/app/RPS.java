@@ -24,11 +24,11 @@ public class RPS {
 
     // Counters for overall stats.
     public double totalRounds = 0;
-    private double winsA = 0;
-    private int lossesA = 0;
-    private double winsB = 0;
-    private int lossesB = 0;
-    private int ties = 0;
+    public double winsA = 0;
+    public int lossesA = 0;
+    public double winsB = 0;
+    public int lossesB = 0;
+    public int ties = 0;
     private int currentWinStreakA = 0;
     private int currentLoseStreakA = 0;
     private int currentWinStreakB = 0;
