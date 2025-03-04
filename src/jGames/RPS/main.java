@@ -1,4 +1,4 @@
-package app;
+package jGames.RPS;
 
 public class main {
 

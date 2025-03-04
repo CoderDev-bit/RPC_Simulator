@@ -1,17 +1,16 @@
-package app;
+package jGames.RPS;
 
 import javax.swing.*;
 import java.awt.*;
-
-import static java.awt.Color.red;
 
 public class GUI {
 
     JFrame frmMain;
     final int FRAME_WIDTH = 550, FRAME_HEIGHT = 450;
     JCheckBox[][] arrCkStats;
+    JCheckBox ckAll;
     JPanel pnlConfig, pnlSimulation, pnlReport;
-    JButton btnStart, btnPause, btnExit, btnEndTest, btnRetest, btnRestart;
+    JButton btnStart, btnPause, btnExit, btnEndTest, btnNewTest;
     JComboBox<String> cbA, cbB;
     JRadioButton rbEndless, rbEnding;
     JLabel lblTitle, lblRealTime, lblReport, lblA, lblB, lblDuration, lblStats, lblTrials, lblResultA, lblResultB, lblMoveA, lblMoveB, lblWinRateA, lblWinRateB;
@@ -54,6 +53,8 @@ public class GUI {
         btnStart = new JButton("Start Test");
         btnExit = new JButton("Exit");
 
+        ckAll = new JCheckBox("<html>Select All. <i>*Some stats cannot be disabled!</i></html>");
+        ckAll.setBounds(100, 340, 200, 30);
         arrCkStats = new JCheckBox[2][];
         arrCkStats[0] = new JCheckBox[2];
         arrCkStats[1] = new JCheckBox[2];
@@ -69,6 +70,18 @@ public class GUI {
                 i++;
             }
         }
+
+        ckAll.addActionListener(e -> {
+
+            for (JCheckBox[] arrCkStat : arrCkStats) {
+                for (JCheckBox jCheckBox : arrCkStat) {
+                    jCheckBox.setSelected(true);
+                }
+            }
+
+            ckAll.setSelected(false);
+
+        });
 
         lblTitle.setBounds(100, 5, 300, 30);
         lblRealTime.setBounds(30, 205, 100, 30);
@@ -118,7 +131,7 @@ public class GUI {
 
             } catch (NumberFormatException ex) {
 
-                if (txtTrials.getText().equals("")) {
+                if (txtTrials.getText().isEmpty()) {
 
                     IntStopAtTrial = null;
 
@@ -139,7 +152,7 @@ public class GUI {
             blnChoicePickRate = arrCkStats[1][0].isSelected();
             blnTieRate = arrCkStats[1][1].isSelected();
 
-            tmrWinRates = new Timer(100, ae -> {
+            tmrWinRates = new Timer(10, ae -> {
 
                 if (trial == (IntStopAtTrial != null ? IntStopAtTrial : -1)) {
 
@@ -152,7 +165,7 @@ public class GUI {
 
                 objTest.simulateTrial();
 
-                lblTrials.setText("Trial #: " + String.valueOf((int) objTest.totalRounds));
+                lblTrials.setText("Trial #: " + (int) objTest.totalRounds);
 
                 if (blnImmediateWinner) {
                     if (objTest.blnIsWinnerA != null) {
@@ -206,19 +219,16 @@ public class GUI {
         pnlConfig.add(btnExit);
         pnlConfig.add(rbEndless);
         pnlConfig.add(rbEnding);
+        pnlConfig.add(ckAll);
     }
 
     private String getMoveAsString(Integer move) {
-        switch (move) {
-            case 0:
-                return "Rock";
-            case 1:
-                return "Paper";
-            case 2:
-                return "Scissors";
-            default:
-                return "Unknown";
-        }
+        return switch (move) {
+            case 0 -> "Rock";
+            case 1 -> "Paper";
+            case 2 -> "Scissors";
+            default -> "Unknown";
+        };
     }
 
     public void updateWinRateDisplays(double playerAWinRate, double playerBWinRate) {
@@ -270,7 +280,7 @@ public class GUI {
         lblTitle.setBounds(100, 5, 300, 30);
         lblB.setBounds(450,180,100,30);
         lblA.setBounds(40,180,100,30);
-        lblTrials.setBounds(200,230,100,30);
+        lblTrials.setBounds(249,210,100,30);
         lblResultA.setBounds(40, 150, 100, 30);
         lblResultB.setBounds(450, 150, 100, 30);
         lblMoveA.setBounds(40, 200, 100, 30);
@@ -301,6 +311,7 @@ public class GUI {
         btnEndTest.addActionListener(e -> {
 
             initReportPanel();
+            tmrWinRates.stop();
             frmMain.remove(pnlSimulation);
             frmMain.add(pnlReport);
             frmMain.revalidate();
@@ -334,14 +345,20 @@ public class GUI {
         lblTitle.setText("<html><h1>Report</h1></html>");
         lblTitle.setBounds(100, 5, 300, 30);
 
-        btnRestart = new JButton("Restart");
-        btnRetest = new JButton("Retest");
-        btnRestart.setBounds(100, 270, 100, 30);
-        btnRetest.setBounds(200, 270, 100, 30);
+        btnNewTest = new JButton("+ New Test");
+        btnNewTest.setBounds(247, 310, 100, 30);
+        //scrollPane.setBounds(100, 50, 400, 300);
 
         pnlReport.add(lblTitle);
-        pnlReport.add(btnRestart);
-        pnlReport.add(btnRetest);
+        pnlReport.add(btnNewTest);
+
+        btnNewTest.addActionListener(e -> {
+
+            frmMain.dispose();
+            objTest = null;
+            initGUI();
+
+        });
 
         // Base rows: Total Rounds, Wins, Losses, Ties, Win Rate (5 rows always included)
         int baseRows = 6;
@@ -352,13 +369,14 @@ public class GUI {
         if (blnChoicePickRate) {
             optionalRows += 3;
         }
-        int totalRows = baseRows + optionalRows;
+        int extraRows = 4; // For Max Win Streak, Max Lose Streak, Max Tie Streak, and Entropy
+        int totalRows = baseRows + optionalRows + extraRows;
+        String[][] tableData = new String[totalRows][3];
 
-        String[][] tableData = new String[totalRows][3]; // 3 columns now
         int rowIndex = 0;
 
 // Total Rounds row
-        tableData[rowIndex][0] = "Total Rounds";
+        tableData[rowIndex][0] = "Completed Trials";
         tableData[rowIndex][1] = String.valueOf((int) objTest.totalRounds);
         tableData[rowIndex][2] = String.valueOf((int) objTest.totalRounds);
         rowIndex++;
@@ -419,9 +437,34 @@ public class GUI {
             rowIndex++;
         }
 
+        // Max Win Streak row.
+        tableData[rowIndex][0] = "Max Win Streak";
+        tableData[rowIndex][1] = String.valueOf(objTest.maxWinStreakA);
+        tableData[rowIndex][2] = String.valueOf(objTest.maxWinStreakB);
+        rowIndex++;
+
+// Max Lose Streak row.
+        tableData[rowIndex][0] = "Max Lose Streak";
+        tableData[rowIndex][1] = String.valueOf(objTest.maxLoseStreakA);
+        tableData[rowIndex][2] = String.valueOf(objTest.maxLoseStreakB);
+        rowIndex++;
+
+// Max Tie Streak row.
+        tableData[rowIndex][0] = "Max Tie Streak";
+        tableData[rowIndex][1] = String.valueOf(objTest.maxTieStreak);
+        tableData[rowIndex][2] = String.valueOf(objTest.maxTieStreak);
+        rowIndex++;
+
+// Entropy row.
+        tableData[rowIndex][0] = "Entropy";
+        tableData[rowIndex][1] = String.format("%.2f", objTest.entropyA);
+        tableData[rowIndex][2] = String.format("%.2f", objTest.entropyB);
+        rowIndex++;
+
+
 
         // Create the table with header columns "Player A" and "Player B".
-        String[] columnNames = {"Stat", "Player A", "Player B"};
+        String[] columnNames = {"STAT", "Player A", "Player B"};
         tblStats = new JTable(tableData, columnNames);
         tblStats.setEnabled(false);
         //tblStats.setDefaultEditor(Object.class, null);
