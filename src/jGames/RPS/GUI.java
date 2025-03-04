@@ -5,8 +5,8 @@ import java.awt.*;
 
 class GUI {
 
-    JFrame frmMain;
     final int CONTAINER_W = 550, CONTAINER_H = 450;
+    JFrame frmMain;
     JCheckBox[][] arrCkStats;
     JCheckBox ckSelectAll;
     JPanel pnlConfig, pnlSimulation, pnlReport;
@@ -20,8 +20,9 @@ class GUI {
     JTable tblReport;
     boolean blnImmediateWinner, blnPlayerChoices, blnChoicePickRate, blnTieRate;
     Timer tmrWinRates;
-    RPS objTest;
-    Integer wintIntervalDelay, wintStopAtTrial, wintTrial;
+    RPS objRPS;
+    Integer wintIntervalDelay, wintStopAtTrial;
+    int intTrial;
 
     void initGUI() {
         frmMain = new JFrame("GameTest™");
@@ -53,7 +54,7 @@ class GUI {
         cbPlayerB = new JComboBox<>(new String[]{"Random", "Human", "Against Human", "Adaptive"});
         txtTrials = new JTextField(10);
         txtSpeed = new JTextField(10);
-        btnStart = new JButton("Start jGames.RPS.Test");
+        btnStart = new JButton("Start");
         btnExit = new JButton("Exit");
 
         ckSelectAll = new JCheckBox("<html>Select All. <i>*Some stats cannot be disabled!</i></html>");
@@ -127,7 +128,7 @@ class GUI {
 
         btnStart.addActionListener(e -> {
 
-// First, validate and parse the speed input
+            // First, validate and parse the speed input
             try {
                 wintIntervalDelay = Integer.parseInt(txtSpeed.getText());
                 if (wintIntervalDelay <= 0) {
@@ -138,7 +139,7 @@ class GUI {
                 return;
             }
 
-// Next, validate and parse the trials input (allowing endless mode)
+            // Next, validate and parse the trials input (allowing endless mode)
             if (txtTrials.getText().isEmpty()) {
                 wintStopAtTrial = null;  // Endless mode
             } else {
@@ -155,9 +156,9 @@ class GUI {
 
 
             initSimulationPanel();
-            objTest = new RPS();
-            objTest.strStratA = cbPlayerA.getSelectedItem().toString();
-            objTest.strStratB = cbPlayerB.getSelectedItem().toString();
+            objRPS = new RPS();
+            objRPS.strStratA = cbPlayerA.getSelectedItem().toString();
+            objRPS.strStratB = cbPlayerB.getSelectedItem().toString();
             blnImmediateWinner = arrCkStats[0][0].isSelected();
             blnPlayerChoices = arrCkStats[0][1].isSelected();
             blnChoicePickRate = arrCkStats[1][0].isSelected();
@@ -165,7 +166,7 @@ class GUI {
 
             tmrWinRates = new Timer(wintIntervalDelay, ae -> {
 
-                if (wintTrial == (wintStopAtTrial != null ? wintStopAtTrial : -1)) {
+                if (intTrial == (wintStopAtTrial != null ? wintStopAtTrial : -1)) {
 
                     tmrWinRates.stop();
                     btnEndTest.setEnabled(true);
@@ -174,14 +175,14 @@ class GUI {
 
                 }
 
-                objTest.simulateTrial();
+                objRPS.simulateTrial();
 
-                lblTrials.setText("Trial #: " + (int) objTest.dblTotalRounds);
+                lblTrials.setText("Trial #: " + (int) objRPS.dblTotalRounds);
 
                 if (blnImmediateWinner) {
-                    if (objTest.blnIsWinnerA != null) {
-                        lblResultA.setText((objTest.blnIsWinnerA) ? "W" : "L");
-                        lblResultB.setText((!objTest.blnIsWinnerA) ? "W" : "L");
+                    if (objRPS.blnIsWinnerA != null) {
+                        lblResultA.setText((objRPS.blnIsWinnerA) ? "W" : "L");
+                        lblResultB.setText((!objRPS.blnIsWinnerA) ? "W" : "L");
                     } else {
                         lblResultA.setText("T");
                         lblResultB.setText("T");
@@ -189,16 +190,16 @@ class GUI {
                 }
 
                 if (blnPlayerChoices) {
-                    lblMoveA.setText(getMoveAsString(objTest.intMoveA));
-                    lblMoveB.setText(getMoveAsString(objTest.intMoveB));
+                    lblMoveA.setText(getMoveAsString(objRPS.intMoveA));
+                    lblMoveB.setText(getMoveAsString(objRPS.intMoveB));
                 }
 
-                double playerAWinRate = objTest.dblWinRateA;
-                double playerBWinRate = objTest.dblWinRateB;
+                double playerAWinRate = objRPS.dblWinRateA;
+                double playerBWinRate = objRPS.dblWinRateB;
 
                 updateWinRateDisplays(playerAWinRate, playerBWinRate);
 
-                wintTrial++;
+                intTrial++;
 
             });
 
@@ -287,13 +288,13 @@ class GUI {
         lblWinRateA = new JLabel("<html><h1>0%</h1></html>");
         lblWinRateB = new JLabel("<html><h1>0%</h1></html>");
         pbWinRates = new JProgressBar();
-        btnEndTest = new JButton("End jGames.RPS.Test");
+        btnEndTest = new JButton("End Game");
         btnPause = new JButton("Pause");
 
         lblTitle.setBounds(100, 5, 300, 30);
-        lblPlayerB.setBounds(450,180,100,30);
-        lblPlayerA.setBounds(40,180,100,30);
-        lblTrials.setBounds(249,210,100,30);
+        lblPlayerB.setBounds(450, 180, 100, 30);
+        lblPlayerA.setBounds(40, 180, 100, 30);
+        lblTrials.setBounds(249, 210, 100, 30);
         lblResultA.setBounds(40, 150, 100, 30);
         lblResultB.setBounds(450, 150, 100, 30);
         lblMoveA.setBounds(40, 200, 100, 30);
@@ -358,9 +359,8 @@ class GUI {
         lblTitle.setText("<html><h1>Report</h1></html>");
         lblTitle.setBounds(100, 5, 300, 30);
 
-        btnNewTest = new JButton("+ New jGames.RPS.Test");
+        btnNewTest = new JButton("+ New Test");
         btnNewTest.setBounds(247, 310, 100, 30);
-        //scrollPane.setBounds(100, 50, 400, 300);
 
         pnlReport.add(lblTitle);
         pnlReport.add(btnNewTest);
@@ -368,7 +368,7 @@ class GUI {
         btnNewTest.addActionListener(e -> {
 
             frmMain.dispose();
-            objTest = null;
+            objRPS = null;
             initGUI();
 
         });
@@ -388,104 +388,89 @@ class GUI {
 
         int rowIndex = 0;
 
-// Total Rounds row
         tableData[rowIndex][0] = "Completed Trials";
-        tableData[rowIndex][1] = String.valueOf((int) objTest.dblTotalRounds);
-        tableData[rowIndex][2] = String.valueOf((int) objTest.dblTotalRounds);
+        tableData[rowIndex][1] = String.valueOf((int) objRPS.dblTotalRounds);
+        tableData[rowIndex][2] = String.valueOf((int) objRPS.dblTotalRounds);
         rowIndex++;
 
-// Wins row
         tableData[rowIndex][0] = "Wins";
-        tableData[rowIndex][1] = String.valueOf((int) objTest.dblWinsA);
-        tableData[rowIndex][2] = String.valueOf((int) objTest.dblWinsB);
+        tableData[rowIndex][1] = String.valueOf((int) objRPS.dblWinsA);
+        tableData[rowIndex][2] = String.valueOf((int) objRPS.dblWinsB);
         rowIndex++;
 
-// Losses row
         tableData[rowIndex][0] = "Losses";
-        tableData[rowIndex][1] = String.valueOf(objTest.intLossesA);
-        tableData[rowIndex][2] = String.valueOf(objTest.intLossesB);
+        tableData[rowIndex][1] = String.valueOf(objRPS.intLossesA);
+        tableData[rowIndex][2] = String.valueOf(objRPS.intLossesB);
         rowIndex++;
 
-// Ties row
         tableData[rowIndex][0] = "Ties";
-        tableData[rowIndex][1] = String.valueOf(objTest.intTies);
-        tableData[rowIndex][2] = String.valueOf(objTest.intTies);
+        tableData[rowIndex][1] = String.valueOf(objRPS.intTies);
+        tableData[rowIndex][2] = String.valueOf(objRPS.intTies);
         rowIndex++;
 
-// Win Rate row
         tableData[rowIndex][0] = "Win Rate";
-        tableData[rowIndex][1] = String.format("%.2f%%", objTest.dblWinRateA * 100);
-        tableData[rowIndex][2] = String.format("%.2f%%", objTest.dblWinRateB * 100);
+        tableData[rowIndex][1] = String.format("%.2f%%", objRPS.dblWinRateA * 100);
+        tableData[rowIndex][2] = String.format("%.2f%%", objRPS.dblWinRateB * 100);
         rowIndex++;
 
-// Strategies row
         tableData[rowIndex][0] = "Strategy";
-        tableData[rowIndex][1] = objTest.strStratA;
-        tableData[rowIndex][2] = objTest.strStratB;
+        tableData[rowIndex][1] = objRPS.strStratA;
+        tableData[rowIndex][2] = objRPS.strStratB;
         rowIndex++;
 
-// Optional: Tie Rate row
         if (blnTieRate) {
             tableData[rowIndex][0] = "Tie Rate";
-            tableData[rowIndex][1] = String.format("%.2f%%", objTest.dblTieRate * 100);
-            tableData[rowIndex][2] = String.format("%.2f%%", objTest.dblTieRate * 100);
+            tableData[rowIndex][1] = String.format("%.2f%%", objRPS.dblTieRate * 100);
+            tableData[rowIndex][2] = String.format("%.2f%%", objRPS.dblTieRate * 100);
             rowIndex++;
         }
 
-// Optional: Player Move Rates
+        // Optional: Player Move Rates
         if (blnChoicePickRate) {
             tableData[rowIndex][0] = "Rock Pick Rate";
-            tableData[rowIndex][1] = String.format("%.2f%%", objTest.dblRockPickRateA * 100);
-            tableData[rowIndex][2] = String.format("%.2f%%", objTest.dblRockPickRateB * 100);
+            tableData[rowIndex][1] = String.format("%.2f%%", objRPS.dblRockPickRateA * 100);
+            tableData[rowIndex][2] = String.format("%.2f%%", objRPS.dblRockPickRateB * 100);
             rowIndex++;
 
             tableData[rowIndex][0] = "Paper Pick Rate";
-            tableData[rowIndex][1] = String.format("%.2f%%", objTest.dblPaperPickRateA * 100);
-            tableData[rowIndex][2] = String.format("%.2f%%", objTest.dblPaperPickRateB * 100);
+            tableData[rowIndex][1] = String.format("%.2f%%", objRPS.dblPaperPickRateA * 100);
+            tableData[rowIndex][2] = String.format("%.2f%%", objRPS.dblPaperPickRateB * 100);
             rowIndex++;
 
             tableData[rowIndex][0] = "Scissors Pick Rate";
-            tableData[rowIndex][1] = String.format("%.2f%%", objTest.dblScissorsPickRateA * 100);
-            tableData[rowIndex][2] = String.format("%.2f%%", objTest.dblScissorsPickRateB * 100);
+            tableData[rowIndex][1] = String.format("%.2f%%", objRPS.dblScissorsPickRateA * 100);
+            tableData[rowIndex][2] = String.format("%.2f%%", objRPS.dblScissorsPickRateB * 100);
             rowIndex++;
         }
 
-        // Max Win Streak row.
         tableData[rowIndex][0] = "Max Win Streak";
-        tableData[rowIndex][1] = String.valueOf(objTest.intMaxWinStreakA);
-        tableData[rowIndex][2] = String.valueOf(objTest.intMaxWinStreakB);
+        tableData[rowIndex][1] = String.valueOf(objRPS.intMaxWinStreakA);
+        tableData[rowIndex][2] = String.valueOf(objRPS.intMaxWinStreakB);
         rowIndex++;
 
-// Max Lose Streak row.
         tableData[rowIndex][0] = "Max Lose Streak";
-        tableData[rowIndex][1] = String.valueOf(objTest.intMaxLoseStreakA);
-        tableData[rowIndex][2] = String.valueOf(objTest.intMaxLoseStreakB);
+        tableData[rowIndex][1] = String.valueOf(objRPS.intMaxLoseStreakA);
+        tableData[rowIndex][2] = String.valueOf(objRPS.intMaxLoseStreakB);
         rowIndex++;
 
-// Max Tie Streak row.
         tableData[rowIndex][0] = "Max Tie Streak";
-        tableData[rowIndex][1] = String.valueOf(objTest.intMaxTieStreak);
-        tableData[rowIndex][2] = String.valueOf(objTest.intMaxTieStreak);
+        tableData[rowIndex][1] = String.valueOf(objRPS.intMaxTieStreak);
+        tableData[rowIndex][2] = String.valueOf(objRPS.intMaxTieStreak);
         rowIndex++;
 
-// Entropy row.
         tableData[rowIndex][0] = "Entropy";
-        tableData[rowIndex][1] = String.format("%.2f", objTest.dblEntropyA);
-        tableData[rowIndex][2] = String.format("%.2f", objTest.dblEntropyB);
-        rowIndex++;
-
+        tableData[rowIndex][1] = String.format("%.2f", objRPS.dblEntropyA);
+        tableData[rowIndex][2] = String.format("%.2f", objRPS.dblEntropyB);
 
 
         // Create the table with header columns "Player A" and "Player B".
         String[] columnNames = {"STAT", "Player A", "Player B"};
         tblReport = new JTable(tableData, columnNames);
         tblReport.setEnabled(false);
-        //tblStats.setDefaultEditor(Object.class, null);
         JScrollPane scrollPane = new JScrollPane(tblReport);
         scrollPane.setBounds(100, 50, 400, 300);
         pnlReport.add(scrollPane);
 
     }
-
 
 }

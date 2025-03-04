@@ -3,16 +3,16 @@ package jGames.RPS;
 import java.util.Random;
 
 class RPS {
-    // Existing variables ...
-    private Random rndMove = new Random();
+
+    private final Random rndMove = new Random();
+    private final int[] arrMoveCountA = {1, 1, 1};
+    private final int[] arrMoveCountB = {1, 1, 1};
 
     Integer intMoveA, intMoveB, intLastMoveA, intLastMoveB;
     Boolean blnIsWinnerA, blnLastWinnerA;
     String strStratA, strStratB;
-
     Double dblWinRateA, dblWinRateB, dblTieRate;
     Double dblRockPickRateA, dblRockPickRateB, dblPaperPickRateA, dblPaperPickRateB, dblScissorsPickRateA, dblScissorsPickRateB;
-    private int[] arrMoveCountA = {1, 1, 1}, arrMoveCountB = {1, 1, 1};
 
     double dblTotalRounds = 0;
     double dblWinsA = 0;
@@ -20,20 +20,13 @@ class RPS {
     double dblWinsB = 0;
     int intLossesB = 0;
     int intTies = 0;
-
-    // Current streak counters.
-    private int intCurrentWinStreakA = 0, intCurrentLoseStreakA = 0;
-    private int intCurrentWinStreakB = 0, intCurrentLoseStreakB = 0;
-    private int intCurrentTieStreak = 0;
-
-    // New maximum streak variables (public for GUI
-    // access).
     int intMaxWinStreakA = 0, intMaxLoseStreakA = 0;
     int intMaxWinStreakB = 0, intMaxLoseStreakB = 0;
     int intMaxTieStreak = 0;
-
-    // Entropy for each player.
     double dblEntropyA = 0, dblEntropyB = 0;
+    private int intCurrentWinStreakA = 0, intCurrentLoseStreakA = 0;
+    private int intCurrentWinStreakB = 0, intCurrentLoseStreakB = 0;
+    private int intCurrentTieStreak = 0;
 
     void simulateTrial() {
         // Save previous moves/outcome.
@@ -118,16 +111,14 @@ class RPS {
         dblEntropyB = calculateEntropy(dblRockPickRateB, dblPaperPickRateB, dblScissorsPickRateB);
     }
 
-    // Calculate Shannon entropy (in bits) from three probabilities.
     private double calculateEntropy(double p1, double p2, double p3) {
-        return - (entropyTerm(p1) + entropyTerm(p2) + entropyTerm(p3));
+        return -(entropyTerm(p1) + entropyTerm(p2) + entropyTerm(p3));
     }
 
     private double entropyTerm(double p) {
         return (p <= 0) ? 0 : p * (Math.log(p) / Math.log(2));
     }
 
-    // This method returns a move (0, 1, or 2) based on the current player's strategy.
     private int simulateMove(boolean isTurnOfPlayerA) {
         // Choose the correct strategy.
         String strat = isTurnOfPlayerA ? strStratA : strStratB;
@@ -146,7 +137,7 @@ class RPS {
             }
         }
         int move;
-        switch(strat) {
+        switch (strat) {
             case "Random":
                 // Uniform random move.
                 move = rndMove.nextInt(3);
@@ -218,12 +209,10 @@ class RPS {
                 break;
         }
         updateMoveCount(isTurnOfPlayerA, move);
-        //System.out.println("Move: " + move);
         return move;
 
     }
 
-    // Increment the move count for the given player.
     private void updateMoveCount(boolean isPlayerA, int move) {
         if (isPlayerA) {
             arrMoveCountA[move]++;
@@ -232,32 +221,8 @@ class RPS {
         }
     }
 
-    // Given an opponent move, return the counter move.
-    // (Rock -> Paper, Paper -> Scissors, Scissors -> Rock)
     private int counterMove(int move) {
         return (move + 1) % 3;
-    }
-
-    // Simulate multiple rounds and then print out statistics.
-    void simulateGame(int rounds) {
-        for (int i = 0; i < rounds; i++) {
-            simulateTrial();
-        }
-        System.out.println("Total Rounds: " + dblTotalRounds);
-        System.out.println("Wins for A: " + dblWinsA);
-        System.out.println("Losses for A: " + intLossesA);
-        System.out.println("Wins for B: " + dblWinsB);
-        System.out.println("Losses for B: " + intLossesB);
-        System.out.println("Ties: " + intTies);
-        System.out.println("Win rate for A: " + dblWinRateA);
-        System.out.println("Win rate for B: " + dblWinRateB);
-        System.out.println("Tie rate: " + dblTieRate);
-        System.out.println("Player A Move Rates: Rock: " + dblRockPickRateA +
-                ", Paper: " + dblPaperPickRateA +
-                ", Scissors: " + dblScissorsPickRateA);
-        System.out.println("Player B Move Rates: Rock: " + dblRockPickRateB +
-                ", Paper: " + dblPaperPickRateB +
-                ", Scissors: " + dblScissorsPickRateB);
     }
 
 }
