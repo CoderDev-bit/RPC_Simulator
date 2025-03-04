@@ -1,6 +1,9 @@
 package app;
 
 import javax.swing.*;
+import java.awt.*;
+
+import static java.awt.Color.red;
 
 public class GUI {
 
@@ -8,13 +11,14 @@ public class GUI {
     final int FRAME_WIDTH = 550, FRAME_HEIGHT = 450;
     JCheckBox[][] arrCkStats;
     JPanel pnlConfig, pnlSimulation, pnlReport;
-    JButton btnStart, btnBack;
+    JButton btnStart, btnExit, btnEndTest;
     JComboBox<String> cbA, cbB;
     JRadioButton rbEndless, rbEnding;
-    JLabel lblTitle, lblRealTime, lblA, lblB, lblDuration, lblStats, lblTrials;
+    JLabel lblTitle, lblRealTime, lblReport, lblA, lblB, lblDuration, lblStats, lblTrials, lblResultA, lblResultB, lblMoveA, lblMoveB;
     JTextField txtTrials;
     JProgressBar pbWinRates;
     Timer tmrWinRates;
+    JTable tblStats;
     RPS objTest;
     Integer IntStopAtTrial;
 
@@ -36,6 +40,7 @@ public class GUI {
 
         lblTitle = new JLabel("<html><h1>Configuration</h1></html>");
         lblRealTime = new JLabel("<html><i>Real Time</i></html>");
+        lblReport = new JLabel("<html><i>Report</i></html>");
         lblA = new JLabel("<html><i>Player A Strategy</html></i>");
         lblB = new JLabel("<html><i>Player B Strategy</html></i>");
         lblDuration = new JLabel("<html><h3>DURATION:</h3></html>");
@@ -46,12 +51,12 @@ public class GUI {
         cbB = new JComboBox<>(new String[]{"Random", "Human", "Against Human", "Adaptive"});
         txtTrials = new JTextField(10);
         btnStart = new JButton("Start Test");
-        btnBack = new JButton("Exit");
+        btnExit = new JButton("Exit");
 
         arrCkStats = new JCheckBox[2][];
         arrCkStats[0] = new JCheckBox[2];
-        arrCkStats[1] = new JCheckBox[5];
-        String[] arrStatNames = {"Immediate Winner", "Player Choices", "Overall Winner", "Choice Win Rate", "Choice Pick Rate", "Tie Rate", "Streaks"};
+        arrCkStats[1] = new JCheckBox[4];
+        String[] arrStatNames = {"Immediate Winner", "Player Choices", "Overall Winner", "Choice Pick Rate", "Tie Rate", "Streaks"};
 
         int i = 0;
         for (int row = 0; row < arrCkStats.length; row++) {
@@ -65,6 +70,7 @@ public class GUI {
 
         lblTitle.setBounds(100, 5, 300, 30);
         lblRealTime.setBounds(30, 205, 100, 30);
+        lblReport.setBounds(30, 255, 100, 30);
         lblA.setBounds(300, 70, 100, 30);
         lblB.setBounds(300, 150, 100, 30);
         lblDuration.setBounds(100, 75, 100, 30);
@@ -75,7 +81,7 @@ public class GUI {
         cbB.setBounds(300, 180, 100, 30);
         txtTrials.setBounds(100, 130, 100, 30);
         btnStart.setBounds(300, 230, 100, 30);
-        btnBack.setBounds(300, 270, 100, 30);
+        btnExit.setBounds(300, 270, 100, 30);
 
         rbEndless.addActionListener(e -> {
             rbEnding.setSelected(false);
@@ -110,11 +116,16 @@ public class GUI {
             objTest.strStratB = cbB.getSelectedItem().toString();
             //objTest.simulateGame(1000);
 
-            tmrWinRates = new Timer(500, ae -> {
+            tmrWinRates = new Timer(1, ae -> {
 
                 objTest.simulateTrial();
-                pbWinRates.setValue((int) (objTest.dblWinRateA * 100));
-                lblTrials.setText("" + objTest.totalRounds);
+
+                lblTrials.setText(String.valueOf(objTest.totalRounds));
+
+                double playerAWinRate = objTest.dblWinRateA;
+                double playerBWinRate = objTest.dblWinRateB;
+
+                updateWinRateProgressBar(playerAWinRate, playerBWinRate);
 
             });
 
@@ -123,11 +134,11 @@ public class GUI {
             frmMain.revalidate();
             frmMain.repaint();
 
-            tmrWinRates.start();
+            //tmrWinRates.start();
 
         });
 
-        btnBack.addActionListener(e -> System.exit(0));
+        btnExit.addActionListener(e -> System.exit(0));
 
         rbEndless.setSelected(true);
         txtTrials.setVisible(false);
@@ -139,13 +150,38 @@ public class GUI {
         pnlConfig.add(cbB);
         pnlConfig.add(lblTitle);
         pnlConfig.add(lblRealTime);
+        pnlConfig.add(lblReport);
         pnlConfig.add(lblA);
         pnlConfig.add(lblB);
         pnlConfig.add(lblDuration);
         pnlConfig.add(lblStats);
         pnlConfig.add(txtTrials);
         pnlConfig.add(btnStart);
-        pnlConfig.add(btnBack);
+        pnlConfig.add(btnExit);
+    }
+
+    public void updateWinRateProgressBar(double playerAWinRate, double playerBWinRate) {
+        if (frmMain == null || pbWinRates == null) return; // Safety check
+
+        // Normalize win rates to a percentage
+        double totalWinRate = playerAWinRate + playerBWinRate;
+        int progressA = (int) ((playerAWinRate / totalWinRate) * 100);
+        int progressB = (int) ((playerBWinRate / totalWinRate) * 100);
+
+        if (playerAWinRate > playerBWinRate) {
+            // Player A has a higher win rate, set progress to grow left-to-right
+            pbWinRates.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+            pbWinRates.setValue(progressA); // Set the progress as Player A's win rate
+            pbWinRates.setForeground(Color.BLUE); // Color for Player A (example)
+        } else {
+            // Player B has a higher win rate, set progress to grow right-to-left
+            pbWinRates.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+            pbWinRates.setValue(progressB); // Set the progress as Player B's win rate
+            pbWinRates.setForeground(Color.RED); // Color for Player B (example)
+        }
+
+        // Optionally repaint/refresh the GUI to show updates
+        pbWinRates.repaint();
     }
 
     void initSimulationPanel() {
@@ -154,21 +190,62 @@ public class GUI {
         pnlSimulation.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 
         lblTitle.setText("<html><h1>Simulation</h1></html>");
-        lblA.setText("Player A");
-        lblB.setText("Player B");
+        lblA.setText("<html><p color=\"red\"> Player A</p><html>");
+        lblB.setText("<html><p color=\"blue\"> Player B</p><html>");
         lblTrials = new JLabel("0");
+        lblResultA = new JLabel("<html><h2>L</h2></html>");
+        lblResultB = new JLabel("<html><h2>L</h2></html>");
+        lblMoveA = new JLabel("<html><h3><i>Rock</h3></i></html>");
+        lblMoveB = new JLabel("<html><h3><i>Paper</i></h3></html>");
         pbWinRates = new JProgressBar();
+        btnEndTest = new JButton("End Test");
 
         lblTitle.setBounds(100, 5, 300, 30);
         lblB.setBounds(450,180,100,30);
         lblA.setBounds(40,180,100,30);
         lblTrials.setBounds(200,200,100,30);
+        lblResultA.setBounds(40, 150, 100, 30);
+        lblResultB.setBounds(450, 150, 100, 30);
+        lblMoveA.setBounds(40, 100, 100, 30);
+        lblMoveB.setBounds(450, 100, 100, 30);
         pbWinRates.setBounds(125, 180, 300, 30);
+        btnEndTest.setBounds(300, 270, 100, 30);
+
+        btnEndTest.addActionListener(e -> {
+
+            initReportPanel();
+            frmMain.remove(pnlSimulation);
+            frmMain.add(pnlReport);
+            frmMain.revalidate();
+            frmMain.repaint();
+
+        });
 
         pnlSimulation.add(lblTitle);
         pnlSimulation.add(lblA);
         pnlSimulation.add(lblB);
         pnlSimulation.add(lblTrials);
+        pnlSimulation.add(lblResultA);
+        pnlSimulation.add(lblResultB);
+        pnlSimulation.add(lblMoveA);
+        pnlSimulation.add(lblMoveB);
         pnlSimulation.add(pbWinRates);
+        pnlSimulation.add(btnEndTest);
+
+    }
+
+    void initReportPanel() {
+        pnlReport = new JPanel();
+        pnlReport.setLayout(null);
+        pnlReport.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+
+        tblStats = new JTable();
+        lblTitle.setText("<html><h1>Report</h1></html>");
+
+        lblTitle.setBounds(100, 5, 300, 30);
+        tblStats.setBounds(100, 50, 400, 300);
+
+        pnlReport.add(lblTitle);
+        pnlReport.add(tblStats);
     }
 }
