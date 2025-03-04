@@ -1,4 +1,4 @@
-import jGames.RPS.*;
+package jGames.RPS;
 
 import javax.xml.crypto.dsig.spec.RSAPSSParameterSpec;
 

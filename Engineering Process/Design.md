@@ -14,7 +14,7 @@
 
 
 #### **2. Configuration**
-1. Create a new object type RPS which extends Test.
+1. Create a new object type RPS which extends jGames.RPS.Test.
 2. Display configuration options in pnlConfig:
     - **Experimental**:
         - **Radio Buttons**: "Endless" / "Ending".
@@ -24,8 +24,8 @@
     - **Data**:
         - **Checkboxes** for real-time stats (who won, choices, games played).
         - **Checkboxes** for report stats (win count, streaks, usage rates, etc.).
-3. Display **Start Test**, **Back**, and **Quit** buttons.
-4. If **Start Test** clicked, validate settings and proceed to **3. Simulation**.
+3. Display **Start jGames.RPS.Test**, **Back**, and **Quit** buttons.
+4. If **Start jGames.RPS.Test** clicked, validate settings and proceed to **3. Simulation**.
 5. If **Back** clicked, return to **1. Initialization**.
 6. If **Quit** clicked, exit the program.
 

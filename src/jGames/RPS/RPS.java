@@ -2,9 +2,9 @@ package jGames.RPS;
 
 import java.util.Random;
 
-public class RPS {
+class RPS {
     // Existing variables ...
-    Random rndMove = new Random();
+    private Random rndMove = new Random();
 
     Integer intMoveA, intMoveB, intLastMoveA, intLastMoveB;
     Boolean blnIsWinnerA, blnLastWinnerA;
@@ -12,29 +12,30 @@ public class RPS {
 
     Double dblWinRateA, dblWinRateB, dblTieRate;
     Double dblRockPickRateA, dblRockPickRateB, dblPaperPickRateA, dblPaperPickRateB, dblScissorsPickRateA, dblScissorsPickRateB;
-    int[] arrMoveCountA = {1, 1, 1}, arrMoveCountB = {1, 1, 1};
+    private int[] arrMoveCountA = {1, 1, 1}, arrMoveCountB = {1, 1, 1};
 
-    public double totalRounds = 0;
-    public double winsA = 0;
-    public int lossesA = 0;
-    public double winsB = 0;
-    public int lossesB = 0;
-    public int ties = 0;
+    double dblTotalRounds = 0;
+    double dblWinsA = 0;
+    int intLossesA = 0;
+    double dblWinsB = 0;
+    int intLossesB = 0;
+    int intTies = 0;
 
     // Current streak counters.
-    private int currentWinStreakA = 0, currentLoseStreakA = 0;
-    private int currentWinStreakB = 0, currentLoseStreakB = 0;
-    private int currentTieStreak = 0;
+    private int intCurrentWinStreakA = 0, intCurrentLoseStreakA = 0;
+    private int intCurrentWinStreakB = 0, intCurrentLoseStreakB = 0;
+    private int intCurrentTieStreak = 0;
 
-    // New maximum streak variables (public for GUI access).
-    public int maxWinStreakA = 0, maxLoseStreakA = 0;
-    public int maxWinStreakB = 0, maxLoseStreakB = 0;
-    public int maxTieStreak = 0;
+    // New maximum streak variables (public for GUI
+    // access).
+    int intMaxWinStreakA = 0, intMaxLoseStreakA = 0;
+    int intMaxWinStreakB = 0, intMaxLoseStreakB = 0;
+    int intMaxTieStreak = 0;
 
     // Entropy for each player.
-    public double entropyA = 0, entropyB = 0;
+    double dblEntropyA = 0, dblEntropyB = 0;
 
-    public void simulateTrial() {
+    void simulateTrial() {
         // Save previous moves/outcome.
         intLastMoveA = intMoveA;
         intLastMoveB = intMoveB;
@@ -53,54 +54,54 @@ public class RPS {
                     (intMoveA == 2 && intMoveB == 1);
         }
 
-        totalRounds++;
+        dblTotalRounds++;
 
         // Update streaks and overall stats.
         if (blnIsWinnerA == null) {
-            ties++;
-            currentTieStreak++;
-            if (currentTieStreak > maxTieStreak) {
-                maxTieStreak = currentTieStreak;
+            intTies++;
+            intCurrentTieStreak++;
+            if (intCurrentTieStreak > intMaxTieStreak) {
+                intMaxTieStreak = intCurrentTieStreak;
             }
-            currentWinStreakA = currentLoseStreakA = 0;
-            currentWinStreakB = currentLoseStreakB = 0;
+            intCurrentWinStreakA = intCurrentLoseStreakA = 0;
+            intCurrentWinStreakB = intCurrentLoseStreakB = 0;
         } else if (blnIsWinnerA) {
-            winsA++;
-            lossesB++;
+            dblWinsA++;
+            intLossesB++;
             // Player A wins.
-            currentWinStreakA++;
-            if (currentWinStreakA > maxWinStreakA) {
-                maxWinStreakA = currentWinStreakA;
+            intCurrentWinStreakA++;
+            if (intCurrentWinStreakA > intMaxWinStreakA) {
+                intMaxWinStreakA = intCurrentWinStreakA;
             }
-            currentLoseStreakA = 0;
+            intCurrentLoseStreakA = 0;
             // Player B loses.
-            currentLoseStreakB++;
-            if (currentLoseStreakB > maxLoseStreakB) {
-                maxLoseStreakB = currentLoseStreakB;
+            intCurrentLoseStreakB++;
+            if (intCurrentLoseStreakB > intMaxLoseStreakB) {
+                intMaxLoseStreakB = intCurrentLoseStreakB;
             }
-            currentWinStreakB = 0;
-            currentTieStreak = 0;
+            intCurrentWinStreakB = 0;
+            intCurrentTieStreak = 0;
         } else {
-            winsB++;
-            lossesA++;
+            dblWinsB++;
+            intLossesA++;
             // Player B wins.
-            currentWinStreakB++;
-            if (currentWinStreakB > maxWinStreakB) {
-                maxWinStreakB = currentWinStreakB;
+            intCurrentWinStreakB++;
+            if (intCurrentWinStreakB > intMaxWinStreakB) {
+                intMaxWinStreakB = intCurrentWinStreakB;
             }
-            currentLoseStreakB = 0;
+            intCurrentLoseStreakB = 0;
             // Player A loses.
-            currentLoseStreakA++;
-            if (currentLoseStreakA > maxLoseStreakA) {
-                maxLoseStreakA = currentLoseStreakA;
+            intCurrentLoseStreakA++;
+            if (intCurrentLoseStreakA > intMaxLoseStreakA) {
+                intMaxLoseStreakA = intCurrentLoseStreakA;
             }
-            currentWinStreakA = 0;
-            currentTieStreak = 0;
+            intCurrentWinStreakA = 0;
+            intCurrentTieStreak = 0;
         }
 
-        dblWinRateA = winsA / totalRounds;
-        dblWinRateB = winsB / totalRounds;
-        dblTieRate = (double) ties / totalRounds;
+        dblWinRateA = dblWinsA / dblTotalRounds;
+        dblWinRateB = dblWinsB / dblTotalRounds;
+        dblTieRate = (double) intTies / dblTotalRounds;
 
         // Update move pick rates.
         int totalMovesA = arrMoveCountA[0] + arrMoveCountA[1] + arrMoveCountA[2];
@@ -113,8 +114,8 @@ public class RPS {
         dblScissorsPickRateB = (double) arrMoveCountB[2] / totalMovesB;
 
         // Compute entropy for both players.
-        entropyA = calculateEntropy(dblRockPickRateA, dblPaperPickRateA, dblScissorsPickRateA);
-        entropyB = calculateEntropy(dblRockPickRateB, dblPaperPickRateB, dblScissorsPickRateB);
+        dblEntropyA = calculateEntropy(dblRockPickRateA, dblPaperPickRateA, dblScissorsPickRateA);
+        dblEntropyB = calculateEntropy(dblRockPickRateB, dblPaperPickRateB, dblScissorsPickRateB);
     }
 
     // Calculate Shannon entropy (in bits) from three probabilities.
@@ -127,7 +128,7 @@ public class RPS {
     }
 
     // This method returns a move (0, 1, or 2) based on the current player's strategy.
-    int simulateMove(boolean isTurnOfPlayerA) {
+    private int simulateMove(boolean isTurnOfPlayerA) {
         // Choose the correct strategy.
         String strat = isTurnOfPlayerA ? strStratA : strStratB;
         // Get the last move of the player and the opponent.
@@ -238,16 +239,16 @@ public class RPS {
     }
 
     // Simulate multiple rounds and then print out statistics.
-    public void simulateGame(int rounds) {
+    void simulateGame(int rounds) {
         for (int i = 0; i < rounds; i++) {
             simulateTrial();
         }
-        System.out.println("Total Rounds: " + totalRounds);
-        System.out.println("Wins for A: " + winsA);
-        System.out.println("Losses for A: " + lossesA);
-        System.out.println("Wins for B: " + winsB);
-        System.out.println("Losses for B: " + lossesB);
-        System.out.println("Ties: " + ties);
+        System.out.println("Total Rounds: " + dblTotalRounds);
+        System.out.println("Wins for A: " + dblWinsA);
+        System.out.println("Losses for A: " + intLossesA);
+        System.out.println("Wins for B: " + dblWinsB);
+        System.out.println("Losses for B: " + intLossesB);
+        System.out.println("Ties: " + intTies);
         System.out.println("Win rate for A: " + dblWinRateA);
         System.out.println("Win rate for B: " + dblWinRateB);
         System.out.println("Tie rate: " + dblTieRate);
