@@ -13,13 +13,14 @@ public class GUI {
     JButton btnStart, btnPause, btnExit, btnEndTest, btnNewTest;
     JComboBox<String> cbA, cbB;
     JRadioButton rbEndless, rbEnding;
-    JLabel lblTitle, lblRealTime, lblReport, lblA, lblB, lblDuration, lblStats, lblTrials, lblResultA, lblResultB, lblMoveA, lblMoveB, lblWinRateA, lblWinRateB;
-    JTextField txtTrials;
+    JLabel lblTitle, lblRealTime, lblReport, lblA, lblB, lblSpeed, lblDuration, lblStats, lblTrials, lblResultA, lblResultB, lblMoveA, lblMoveB, lblWinRateA, lblWinRateB;
+    JTextField txtTrials, txtSpeed;
     JProgressBar pbWinRates;
     JTable tblStats;
     boolean blnImmediateWinner, blnPlayerChoices, blnChoicePickRate, blnTieRate;
     Timer tmrWinRates;
     RPS objTest;
+    Integer IntIntervalDelay;
     Integer IntStopAtTrial; int trial;
 
     void initGUI() {
@@ -43,6 +44,7 @@ public class GUI {
         lblReport = new JLabel("<html><i>Report</i></html>");
         lblA = new JLabel("<html><i>Player A Strategy</html></i>");
         lblB = new JLabel("<html><i>Player B Strategy</html></i>");
+        lblSpeed = new JLabel("<html><h3>SPEED:</h3></html>");
         lblDuration = new JLabel("<html><h3>DURATION:</h3></html>");
         lblStats = new JLabel("<html><h3>STATS:</h3></html>");
         rbEndless = new JRadioButton("Endless");
@@ -50,6 +52,7 @@ public class GUI {
         cbA = new JComboBox<>(new String[]{"Random", "Human", "Against Human", "Adaptive"});
         cbB = new JComboBox<>(new String[]{"Random", "Human", "Against Human", "Adaptive"});
         txtTrials = new JTextField(10);
+        txtSpeed = new JTextField(10);
         btnStart = new JButton("Start Test");
         btnExit = new JButton("Exit");
 
@@ -89,18 +92,22 @@ public class GUI {
         lblA.setBounds(300, 70, 100, 30);
         lblB.setBounds(300, 150, 100, 30);
         lblDuration.setBounds(100, 75, 100, 30);
+        lblSpeed.setBounds(300, 320, 100, 30);
         lblStats.setBounds(100, 165, 100, 30);
         cbA.setBounds(300, 100, 100, 30);
         cbB.setBounds(300, 180, 100, 30);
         rbEndless.setBounds(100, 100, 100, 30);
         rbEnding.setBounds(200, 100, 100, 30);
         txtTrials.setBounds(100, 130, 100, 30);
+        txtSpeed.setBounds(300, 350, 110, 30);
         btnStart.setBounds(300, 230, 100, 30);
         btnExit.setBounds(300, 270, 100, 30);
 
         rbEndless.setSelected(true);
         txtTrials.setVisible(false);
         txtTrials.setText("");
+
+        txtSpeed.setText("interval delay in ms");
 
         rbEndless.addActionListener(e -> {
 
@@ -120,28 +127,32 @@ public class GUI {
 
         btnStart.addActionListener(e -> {
 
+// First, validate and parse the speed input
             try {
-
-                IntStopAtTrial = Integer.parseInt(txtTrials.getText());
-                if (IntStopAtTrial <= 0) {
-
-                    throw new NumberFormatException();
-
+                IntIntervalDelay = Integer.parseInt(txtSpeed.getText());
+                if (IntIntervalDelay <= 0) {
+                    throw new NumberFormatException("Speed must be > 0");
                 }
+            } catch (NumberFormatException exc) {
+                JOptionPane.showMessageDialog(pnlConfig, "Invalid speed");
+                return;
+            }
 
-            } catch (NumberFormatException ex) {
-
-                if (txtTrials.getText().isEmpty()) {
-
-                    IntStopAtTrial = null;
-
-                } else {
-
+// Next, validate and parse the trials input (allowing endless mode)
+            if (txtTrials.getText().isEmpty()) {
+                IntStopAtTrial = null;  // Endless mode
+            } else {
+                try {
+                    IntStopAtTrial = Integer.parseInt(txtTrials.getText());
+                    if (IntStopAtTrial <= 0) {
+                        throw new NumberFormatException("Trials must be > 0");
+                    }
+                } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(pnlConfig, "Invalid number of trials");
                     return;
-
                 }
             }
+
 
             initSimulationPanel();
             objTest = new RPS();
@@ -152,7 +163,7 @@ public class GUI {
             blnChoicePickRate = arrCkStats[1][0].isSelected();
             blnTieRate = arrCkStats[1][1].isSelected();
 
-            tmrWinRates = new Timer(10, ae -> {
+            tmrWinRates = new Timer(IntIntervalDelay, ae -> {
 
                 if (trial == (IntStopAtTrial != null ? IntStopAtTrial : -1)) {
 
@@ -220,6 +231,8 @@ public class GUI {
         pnlConfig.add(rbEndless);
         pnlConfig.add(rbEnding);
         pnlConfig.add(ckAll);
+        pnlConfig.add(lblSpeed);
+        pnlConfig.add(txtSpeed);
     }
 
     private String getMoveAsString(Integer move) {
