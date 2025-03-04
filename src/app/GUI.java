@@ -11,15 +11,17 @@ public class GUI {
     final int FRAME_WIDTH = 550, FRAME_HEIGHT = 450;
     JCheckBox[][] arrCkStats;
     JPanel pnlConfig, pnlSimulation, pnlReport;
-    JButton btnStart, btnExit, btnEndTest;
+    JButton btnStart, btnPause, btnExit, btnEndTest, btnRetest, btnRestart;
     JComboBox<String> cbA, cbB;
-    JLabel lblTitle, lblRealTime, lblReport, lblA, lblB, lblStats, lblTrials, lblResultA, lblResultB, lblMoveA, lblMoveB, lblWinRateA, lblWinRateB;
+    JRadioButton rbEndless, rbEnding;
+    JLabel lblTitle, lblRealTime, lblReport, lblA, lblB, lblDuration, lblStats, lblTrials, lblResultA, lblResultB, lblMoveA, lblMoveB, lblWinRateA, lblWinRateB;
     JTextField txtTrials;
     JProgressBar pbWinRates;
     JTable tblStats;
     boolean blnImmediateWinner, blnPlayerChoices, blnChoicePickRate, blnTieRate;
     Timer tmrWinRates;
     RPS objTest;
+    Integer IntStopAtTrial; int trial;
 
     void initGUI() {
         frmMain = new JFrame("GameTest™");
@@ -42,7 +44,10 @@ public class GUI {
         lblReport = new JLabel("<html><i>Report</i></html>");
         lblA = new JLabel("<html><i>Player A Strategy</html></i>");
         lblB = new JLabel("<html><i>Player B Strategy</html></i>");
+        lblDuration = new JLabel("<html><h3>DURATION:</h3></html>");
         lblStats = new JLabel("<html><h3>STATS:</h3></html>");
+        rbEndless = new JRadioButton("Endless");
+        rbEnding = new JRadioButton("Ending");
         cbA = new JComboBox<>(new String[]{"Random", "Human", "Against Human", "Adaptive"});
         cbB = new JComboBox<>(new String[]{"Random", "Human", "Against Human", "Adaptive"});
         txtTrials = new JTextField(10);
@@ -70,15 +75,60 @@ public class GUI {
         lblReport.setBounds(30, 255, 100, 30);
         lblA.setBounds(300, 70, 100, 30);
         lblB.setBounds(300, 150, 100, 30);
+        lblDuration.setBounds(100, 75, 100, 30);
         lblStats.setBounds(100, 165, 100, 30);
         cbA.setBounds(300, 100, 100, 30);
         cbB.setBounds(300, 180, 100, 30);
+        rbEndless.setBounds(100, 100, 100, 30);
+        rbEnding.setBounds(200, 100, 100, 30);
         txtTrials.setBounds(100, 130, 100, 30);
         btnStart.setBounds(300, 230, 100, 30);
         btnExit.setBounds(300, 270, 100, 30);
 
+        rbEndless.setSelected(true);
+        txtTrials.setVisible(false);
+        txtTrials.setText("");
+
+        rbEndless.addActionListener(e -> {
+
+            rbEnding.setSelected(false);
+            txtTrials.setVisible(false);
+            txtTrials.setText("");
+
+        });
+
+        rbEnding.addActionListener(e -> {
+
+            rbEndless.setSelected(false);
+            txtTrials.setVisible(true);
+            txtTrials.setText("# of trials");
+
+        });
 
         btnStart.addActionListener(e -> {
+
+            try {
+
+                IntStopAtTrial = Integer.parseInt(txtTrials.getText());
+                if (IntStopAtTrial <= 0) {
+
+                    throw new NumberFormatException();
+
+                }
+
+            } catch (NumberFormatException ex) {
+
+                if (txtTrials.getText().equals("")) {
+
+                    IntStopAtTrial = null;
+
+                } else {
+
+                    JOptionPane.showMessageDialog(pnlConfig, "Invalid number of trials");
+                    return;
+
+                }
+            }
 
             initSimulationPanel();
             objTest = new RPS();
@@ -91,9 +141,18 @@ public class GUI {
 
             tmrWinRates = new Timer(100, ae -> {
 
+                if (trial == (IntStopAtTrial != null ? IntStopAtTrial : -1)) {
+
+                    tmrWinRates.stop();
+                    btnEndTest.setEnabled(true);
+                    btnPause.setEnabled(false);
+                    return;
+
+                }
+
                 objTest.simulateTrial();
 
-                lblTrials.setText("Trial #: " + String.valueOf(objTest.totalRounds));
+                lblTrials.setText("Trial #: " + String.valueOf((int) objTest.totalRounds));
 
                 if (blnImmediateWinner) {
                     if (objTest.blnIsWinnerA != null) {
@@ -114,6 +173,8 @@ public class GUI {
                 double playerBWinRate = objTest.dblWinRateB;
 
                 updateWinRateDisplays(playerAWinRate, playerBWinRate);
+
+                trial++;
 
             });
 
@@ -138,10 +199,13 @@ public class GUI {
         pnlConfig.add(lblReport);
         pnlConfig.add(lblA);
         pnlConfig.add(lblB);
+        pnlConfig.add(lblDuration);
         pnlConfig.add(lblStats);
         pnlConfig.add(txtTrials);
         pnlConfig.add(btnStart);
         pnlConfig.add(btnExit);
+        pnlConfig.add(rbEndless);
+        pnlConfig.add(rbEnding);
     }
 
     private String getMoveAsString(Integer move) {
@@ -162,19 +226,19 @@ public class GUI {
 
         // Normalize win rates to a percentage
         double totalWinRate = playerAWinRate + playerBWinRate;
-        int progressA = (int) ((playerAWinRate / totalWinRate) * 100);
-        int progressB = (int) ((playerBWinRate / totalWinRate) * 100);
+        int progressA = (int) Math.round((playerAWinRate / totalWinRate) * 100);
+        int progressB = (int) Math.round((playerBWinRate / totalWinRate) * 100);
 
         if (playerAWinRate > playerBWinRate) {
             // Player A has a higher win rate, set progress to grow left-to-right
             pbWinRates.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
             pbWinRates.setValue(progressA); // Set the progress as Player A's win rate
-            pbWinRates.setForeground(Color.BLUE); // Color for Player A (example)
+            pbWinRates.setForeground(Color.RED); // Color for Player A (example)
         } else {
             // Player B has a higher win rate, set progress to grow right-to-left
             pbWinRates.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
             pbWinRates.setValue(progressB); // Set the progress as Player B's win rate
-            pbWinRates.setForeground(Color.RED); // Color for Player B (example)
+            pbWinRates.setForeground(Color.BLUE); // Color for Player B (example)
         }
 
         lblWinRateA.setText("<html><h1>" + progressA + "%</h1></html>");
@@ -190,8 +254,8 @@ public class GUI {
         pnlSimulation.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 
         lblTitle.setText("<html><h1>Simulation</h1></html>");
-        lblA.setText("<html><p color=\"red\"> Player A</p><html>");
-        lblB.setText("<html><p color=\"blue\"> Player B</p><html>");
+        lblA.setText("<html><p color=\"red\"> PLAYER A</p><html>");
+        lblB.setText("<html><p color=\"blue\"> PLAYER B</p><html>");
         lblTrials = new JLabel("Trial #: 0");
         lblResultA = new JLabel("<html><h2></h2></html>");
         lblResultB = new JLabel("<html><h2></h2></html>");
@@ -201,6 +265,7 @@ public class GUI {
         lblWinRateB = new JLabel("<html><h1>0%</h1></html>");
         pbWinRates = new JProgressBar();
         btnEndTest = new JButton("End Test");
+        btnPause = new JButton("Pause");
 
         lblTitle.setBounds(100, 5, 300, 30);
         lblB.setBounds(450,180,100,30);
@@ -214,6 +279,24 @@ public class GUI {
         lblWinRateB.setBounds(450, 250, 300, 30);
         pbWinRates.setBounds(125, 180, 300, 30);
         btnEndTest.setBounds(300, 270, 100, 30);
+        btnPause.setBounds(150, 270, 100, 30);
+        //pbWinRates.setStringPainted(true);
+
+        btnPause.addActionListener(e -> {
+
+            if (btnPause.getText().equals("Pause")) {
+
+                tmrWinRates.stop();
+                btnPause.setText("Resume");
+
+            } else {
+
+                tmrWinRates.start();
+                btnPause.setText("Pause");
+
+            }
+
+        });
 
         btnEndTest.addActionListener(e -> {
 
@@ -225,6 +308,8 @@ public class GUI {
 
         });
 
+        btnEndTest.setEnabled(IntStopAtTrial == null);
+
         pnlSimulation.add(lblTitle);
         pnlSimulation.add(lblA);
         pnlSimulation.add(lblB);
@@ -235,6 +320,7 @@ public class GUI {
         pnlSimulation.add(lblMoveB);
         pnlSimulation.add(pbWinRates);
         pnlSimulation.add(btnEndTest);
+        pnlSimulation.add(btnPause);
         pnlSimulation.add(lblWinRateA);
         pnlSimulation.add(lblWinRateB);
 
@@ -247,10 +333,18 @@ public class GUI {
 
         lblTitle.setText("<html><h1>Report</h1></html>");
         lblTitle.setBounds(100, 5, 300, 30);
+
+        btnRestart = new JButton("Restart");
+        btnRetest = new JButton("Retest");
+        btnRestart.setBounds(100, 270, 100, 30);
+        btnRetest.setBounds(200, 270, 100, 30);
+
         pnlReport.add(lblTitle);
+        pnlReport.add(btnRestart);
+        pnlReport.add(btnRetest);
 
         // Base rows: Total Rounds, Wins, Losses, Ties, Win Rate (5 rows always included)
-        int baseRows = 5;
+        int baseRows = 6;
         int optionalRows = 0;
         if (blnTieRate) {
             optionalRows += 1;
@@ -260,60 +354,77 @@ public class GUI {
         }
         int totalRows = baseRows + optionalRows;
 
-        String[][] tableData = new String[totalRows][2];
+        String[][] tableData = new String[totalRows][3]; // 3 columns now
         int rowIndex = 0;
 
-        // Total Rounds row (common stat, so same value for both players)
-        tableData[rowIndex][0] = "Total Rounds: " + objTest.totalRounds;
-        tableData[rowIndex][1] = "Total Rounds: " + objTest.totalRounds;
+// Total Rounds row
+        tableData[rowIndex][0] = "Total Rounds";
+        tableData[rowIndex][1] = String.valueOf((int) objTest.totalRounds);
+        tableData[rowIndex][2] = String.valueOf((int) objTest.totalRounds);
         rowIndex++;
 
-        // Wins row.
-        tableData[rowIndex][0] = "Wins: " + objTest.winsA;
-        tableData[rowIndex][1] = "Wins: " + objTest.winsB;
+// Wins row
+        tableData[rowIndex][0] = "Wins";
+        tableData[rowIndex][1] = String.valueOf((int) objTest.winsA);
+        tableData[rowIndex][2] = String.valueOf((int) objTest.winsB);
         rowIndex++;
 
-        // Losses row.
-        tableData[rowIndex][0] = "Losses: " + objTest.lossesA;
-        tableData[rowIndex][1] = "Losses: " + objTest.lossesB;
+// Losses row
+        tableData[rowIndex][0] = "Losses";
+        tableData[rowIndex][1] = String.valueOf(objTest.lossesA);
+        tableData[rowIndex][2] = String.valueOf(objTest.lossesB);
         rowIndex++;
 
-        // Ties row (common stat).
-        tableData[rowIndex][0] = "Ties: " + objTest.ties;
-        tableData[rowIndex][1] = "Ties: " + objTest.ties;
+// Ties row
+        tableData[rowIndex][0] = "Ties";
+        tableData[rowIndex][1] = String.valueOf(objTest.ties);
+        tableData[rowIndex][2] = String.valueOf(objTest.ties);
         rowIndex++;
 
-        // Win Rate row.
-        tableData[rowIndex][0] = "Win Rate: " + String.format("%.2f%%", objTest.dblWinRateA * 100);
-        tableData[rowIndex][1] = "Win Rate: " + String.format("%.2f%%", objTest.dblWinRateB * 100);
+// Win Rate row
+        tableData[rowIndex][0] = "Win Rate";
+        tableData[rowIndex][1] = String.format("%.2f%%", objTest.dblWinRateA * 100);
+        tableData[rowIndex][2] = String.format("%.2f%%", objTest.dblWinRateB * 100);
         rowIndex++;
 
-        // Optionally include Tie Rate if enabled.
+// Strategies row
+        tableData[rowIndex][0] = "Strategy";
+        tableData[rowIndex][1] = objTest.strStratA;
+        tableData[rowIndex][2] = objTest.strStratB;
+        rowIndex++;
+
+// Optional: Tie Rate row
         if (blnTieRate) {
-            tableData[rowIndex][0] = "Tie Rate: " + String.format("%.2f%%", objTest.dblTieRate * 100);
-            tableData[rowIndex][1] = "Tie Rate: " + String.format("%.2f%%", objTest.dblTieRate * 100);
+            tableData[rowIndex][0] = "Tie Rate";
+            tableData[rowIndex][1] = String.format("%.2f%%", objTest.dblTieRate * 100);
+            tableData[rowIndex][2] = String.format("%.2f%%", objTest.dblTieRate * 100);
             rowIndex++;
         }
 
-        // Optionally include Player Move Rates if enabled.
+// Optional: Player Move Rates
         if (blnChoicePickRate) {
-            // Rock Pick Rate row.
-            tableData[rowIndex][0] = "Rock Pick Rate: " + String.format("%.2f%%", objTest.dblRockPickRateA * 100);
-            tableData[rowIndex][1] = "Rock Pick Rate: " + String.format("%.2f%%", objTest.dblRockPickRateB * 100);
+            tableData[rowIndex][0] = "Rock Pick Rate";
+            tableData[rowIndex][1] = String.format("%.2f%%", objTest.dblRockPickRateA * 100);
+            tableData[rowIndex][2] = String.format("%.2f%%", objTest.dblRockPickRateB * 100);
             rowIndex++;
-            // Paper Pick Rate row.
-            tableData[rowIndex][0] = "Paper Pick Rate: " + String.format("%.2f%%", objTest.dblPaperPickRateA * 100);
-            tableData[rowIndex][1] = "Paper Pick Rate: " + String.format("%.2f%%", objTest.dblPaperPickRateB * 100);
+
+            tableData[rowIndex][0] = "Paper Pick Rate";
+            tableData[rowIndex][1] = String.format("%.2f%%", objTest.dblPaperPickRateA * 100);
+            tableData[rowIndex][2] = String.format("%.2f%%", objTest.dblPaperPickRateB * 100);
             rowIndex++;
-            // Scissors Pick Rate row.
-            tableData[rowIndex][0] = "Scissors Pick Rate: " + String.format("%.2f%%", objTest.dblScissorsPickRateA * 100);
-            tableData[rowIndex][1] = "Scissors Pick Rate: " + String.format("%.2f%%", objTest.dblScissorsPickRateB * 100);
+
+            tableData[rowIndex][0] = "Scissors Pick Rate";
+            tableData[rowIndex][1] = String.format("%.2f%%", objTest.dblScissorsPickRateA * 100);
+            tableData[rowIndex][2] = String.format("%.2f%%", objTest.dblScissorsPickRateB * 100);
             rowIndex++;
         }
+
 
         // Create the table with header columns "Player A" and "Player B".
-        String[] columnNames = {"Player A", "Player B"};
+        String[] columnNames = {"Stat", "Player A", "Player B"};
         tblStats = new JTable(tableData, columnNames);
+        tblStats.setEnabled(false);
+        //tblStats.setDefaultEditor(Object.class, null);
         JScrollPane scrollPane = new JScrollPane(tblStats);
         scrollPane.setBounds(100, 50, 400, 300);
         pnlReport.add(scrollPane);
