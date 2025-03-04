@@ -20,8 +20,7 @@ public class GUI {
     boolean blnImmediateWinner, blnPlayerChoices, blnChoicePickRate, blnTieRate;
     Timer tmrWinRates;
     RPS objTest;
-    Integer IntIntervalDelay;
-    Integer IntStopAtTrial; int trial;
+    Integer wintIntervalDelay, wintStopAtTrial, wintTrial;
 
     void initGUI() {
         frmMain = new JFrame("GameTest™");
@@ -129,8 +128,8 @@ public class GUI {
 
 // First, validate and parse the speed input
             try {
-                IntIntervalDelay = Integer.parseInt(txtSpeed.getText());
-                if (IntIntervalDelay <= 0) {
+                wintIntervalDelay = Integer.parseInt(txtSpeed.getText());
+                if (wintIntervalDelay <= 0) {
                     throw new NumberFormatException("Speed must be > 0");
                 }
             } catch (NumberFormatException exc) {
@@ -140,11 +139,11 @@ public class GUI {
 
 // Next, validate and parse the trials input (allowing endless mode)
             if (txtTrials.getText().isEmpty()) {
-                IntStopAtTrial = null;  // Endless mode
+                wintStopAtTrial = null;  // Endless mode
             } else {
                 try {
-                    IntStopAtTrial = Integer.parseInt(txtTrials.getText());
-                    if (IntStopAtTrial <= 0) {
+                    wintStopAtTrial = Integer.parseInt(txtTrials.getText());
+                    if (wintStopAtTrial <= 0) {
                         throw new NumberFormatException("Trials must be > 0");
                     }
                 } catch (NumberFormatException ex) {
@@ -163,9 +162,9 @@ public class GUI {
             blnChoicePickRate = arrCkStats[1][0].isSelected();
             blnTieRate = arrCkStats[1][1].isSelected();
 
-            tmrWinRates = new Timer(IntIntervalDelay, ae -> {
+            tmrWinRates = new Timer(wintIntervalDelay, ae -> {
 
-                if (trial == (IntStopAtTrial != null ? IntStopAtTrial : -1)) {
+                if (wintTrial == (wintStopAtTrial != null ? wintStopAtTrial : -1)) {
 
                     tmrWinRates.stop();
                     btnEndTest.setEnabled(true);
@@ -198,7 +197,7 @@ public class GUI {
 
                 updateWinRateDisplays(playerAWinRate, playerBWinRate);
 
-                trial++;
+                wintTrial++;
 
             });
 
@@ -332,7 +331,7 @@ public class GUI {
 
         });
 
-        btnEndTest.setEnabled(IntStopAtTrial == null);
+        btnEndTest.setEnabled(wintStopAtTrial == null);
 
         pnlSimulation.add(lblTitle);
         pnlSimulation.add(lblA);
