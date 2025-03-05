@@ -534,6 +534,30 @@ class GUI {
 
     }
 
+    /**********************************************************************
+     * Method name:
+     * initReportPanel
+     *
+     * Description:
+     * This method initializes and sets up the graphical user interface (GUI) for the report panel.
+     * It creates and configures the necessary components such as labels, buttons, and a table to display
+     * the simulation results. The method handles the creation of rows with various statistical data
+     * (such as wins, losses, tie rates, and player strategies) and adds them to a table that will be
+     * displayed in the report panel. It also adds action listeners to buttons, such as a button to start
+     * a new test, which resets the simulation and opens a fresh instance of the GUI.
+     *
+     * Parameters:
+     * None
+     *
+     * Parameter Restrictions:
+     * No restrictions
+     *
+     * Return:
+     * None
+     *
+     * Return Restrictions:
+     * No restrictions
+     **********************************************************************/
     private void initReportPanel() {
         pnlReport = new JPanel();
         pnlReport.setLayout(null);
@@ -548,13 +572,18 @@ class GUI {
         pnlReport.add(lblTitle);
         pnlReport.add(btnNewTest);
 
+        /*
+         * This action listener is attached to the "+ New Test" button.
+         * - When clicked, it disposes of the main frame, nullifies the objRPS object, and reinitializes the GUI
+         *   by calling initGUI(), effectively starting a new simulation.
+         */
         btnNewTest.addActionListener(e -> {
 
             frmMain.dispose();
             objRPS = null;
             initGUI();
 
-        });
+        });/* end of event handler code block */
 
         // Base rows: Total Rounds, Wins, Losses, Ties, Win Rate (5 rows always included)
         int baseRows = 6;
@@ -569,6 +598,11 @@ class GUI {
         int totalRows = baseRows + optionalRows + extraRows;
         String[][] tableData = new String[totalRows][3];
 
+        /*
+         * These block populates the table with core statistics: completed trials, wins, losses, ties, and win rates.
+         * - Each row in the table represents a specific statistic, with values for both players (Player A and Player B).
+         * - The data is gathered from objRPS fields and formatted accordingly.
+         */
         int rowIndex = 0;
 
         tableData[rowIndex][0] = "Completed Trials";
@@ -600,7 +634,13 @@ class GUI {
         tableData[rowIndex][1] = objRPS.strStratA;
         tableData[rowIndex][2] = objRPS.strStratB;
         rowIndex++;
+        /* end of code block */
 
+        /*
+         * This block optionally populates the table with additional statistics if enabled, such as tie rates and
+         * player move pick rates (Rock, Paper, Scissors).
+         * - If blnTieRate or blnChoicePickRate are true, the corresponding rows are added to the table.
+         */
         if (blnTieRate) {
             tableData[rowIndex][0] = "Tie Rate";
             tableData[rowIndex][1] = String.format("%.2f%%", objRPS.dblTieRate * 100);
@@ -625,7 +665,12 @@ class GUI {
             tableData[rowIndex][2] = String.format("%.2f%%", objRPS.dblScissorsPickRateB * 100);
             rowIndex++;
         }
+        /* end of code block */
 
+        /*
+         * These rows populate the table with additional statistics like max win streak, max lose streak, and entropy.
+         * - These values are obtained from objRPS fields and added to the report table model.
+         */
         tableData[rowIndex][0] = "Max Win Streak";
         tableData[rowIndex][1] = String.valueOf(objRPS.intMaxWinStreakA);
         tableData[rowIndex][2] = String.valueOf(objRPS.intMaxWinStreakB);
@@ -644,7 +689,7 @@ class GUI {
         tableData[rowIndex][0] = "Entropy";
         tableData[rowIndex][1] = String.format("%.2f", objRPS.dblEntropyA);
         tableData[rowIndex][2] = String.format("%.2f", objRPS.dblEntropyB);
-
+        /* end of code block */
 
         // Create the table with header columns "Player A" and "Player B".
         String[] columnNames = {"STAT", "Player A", "Player B"};
