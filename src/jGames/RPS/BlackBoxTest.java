@@ -1,7 +1,7 @@
 package jGames.RPS;
 
 public class BlackBoxTest {
-    // Tolerance for floating-point comparisons.
+    /* Tolerance for double comparisons. */
     static final double TOLERANCE = 0.0001;
 
     public static void main(String[] args) {
@@ -13,7 +13,7 @@ public class BlackBoxTest {
         testStrategyOutcomes();
     }
 
-    // Test that simulateTrial() increases the round count and that the outcome is set correctly.
+    /* Test that simulateTrial() increases the round count and that the outcome is set correctly. */
     public static void testRoundIncrementAndOutcomeConsistency() {
         RPS rps = new RPS();
         rps.strStratA = "Random";
@@ -23,13 +23,13 @@ public class BlackBoxTest {
         double newRounds = rps.dblTotalRounds;
         boolean roundIncremented = Math.abs(newRounds - (initialRounds + 1)) < TOLERANCE;
 
-        // Verify outcome consistency for this single trial.
+        /* Verify outcome consistency for this single trial. */
         boolean outcomeValid = false;
         if (rps.intMoveA.equals(rps.intMoveB)) {
             outcomeValid = (rps.blnIsWinnerA == null);
         } else {
-            // Check winning rule:
-            // Rock (0) beats Scissors (2), Paper (1) beats Rock (0), Scissors (2) beats Paper (1)
+            /* Check winning rule: */
+            /* Rock (0) beats Scissors (2), Paper (1) beats Rock (0), Scissors (2) beats Paper (1) */
             if (rps.intMoveA == 0 && rps.intMoveB == 2) {
                 outcomeValid = (rps.blnIsWinnerA != null && rps.blnIsWinnerA);
             } else if (rps.intMoveA == 1 && rps.intMoveB == 0) {
@@ -49,7 +49,7 @@ public class BlackBoxTest {
 
 
 
-    // Simulate many rounds and ensure that for each round the outcome rule holds.
+    /* Simulate many rounds and ensure that for each round the outcome rule holds. */
     public static void testOutcomeRulesConsistency() {
         RPS rps = new RPS();
         rps.strStratA = "Random";
@@ -76,7 +76,7 @@ public class BlackBoxTest {
         System.out.println("testOutcomeRulesConsistency: " + (allRoundsValid ? "PASSED" : "FAILED"));
     }
 
-    // Check that cumulative win, loss, and tie counts add up to the total rounds.
+    /* Check that cumulative win, loss, and tie counts add up to the total rounds. */
     public static void testCumulativeStatsConsistency() {
         RPS rps = new RPS();
         rps.strStratA = "Random";
@@ -98,7 +98,7 @@ public class BlackBoxTest {
         }
     }
 
-    // Verify that the pick rates for rock, paper, and scissors sum to 1 for both players.
+    /* Verify that the pick rates for rock, paper, and scissors sum to 1 for both players. */
     public static void testPickRatesSumToOne() {
         RPS rps = new RPS();
         rps.strStratA = "Random";
@@ -119,7 +119,7 @@ public class BlackBoxTest {
         }
     }
 
-    // Check that the computed entropy for both players is within the valid range.
+    /* Check that the computed entropy for both players is within the valid range. */
     public static void testEntropyRange() {
         RPS rps = new RPS();
         rps.strStratA = "Random";
@@ -141,7 +141,7 @@ public class BlackBoxTest {
         }
     }
 
-    // For each pair of strategies, simulate many rounds and check that the cumulative stats remain consistent.
+    /* For each pair of strategies, simulate many rounds and check that the cumulative stats remain consistent. */
     public static void testStrategyOutcomes() {
         String[] strategies = {"Random", "Human", "Against Human", "Adaptive"};
         int trials = 1000;
