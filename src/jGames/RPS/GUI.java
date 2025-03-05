@@ -25,6 +25,7 @@
  * - Use of multi-panel layout for different stages of the simulation (Config, Simulation, Report).
  * - String manipulation to display player moves and results.
  * - Integration of game logic for RPS simulation.
+ * - Event-driven programming to allow interaction with the graphical interface.
  ***************************************************************************/
 
 
