@@ -1,3 +1,33 @@
+/**************************************************************************
+ * File name:
+ * GUI.java
+ *
+ * Description:
+ * This file contains a class GUI that creates a graphical user interface (GUI)
+ * for a Rock, Paper, Scissors (RPS) game simulation. It includes functionality
+ * for configuring the game settings, starting the game, displaying the results
+ * of the simulation, and updating the win rates in real-time. The GUI allows
+ * the user to select strategies for both players, define game speed, and specify
+ * whether the game should run endlessly or stop after a specified number of trials.
+ *
+ * Author:
+ * S. Patel
+ *
+ * Date: Mar/3/2025
+ *
+ * Concepts:
+ * - Use of JFrame and Swing components (JLabel, JButton, JComboBox, etc.)
+ *   to build the graphical user interface.
+ * - Event handling using ActionListeners to manage user interactions with
+ *   buttons and other controls.
+ * - Use of Timer for periodic updates in the simulation.
+ * - Data validation using exception handling to ensure user input for speed and trials is valid.
+ * - Use of multi-panel layout for different stages of the simulation (Config, Simulation, Report).
+ * - String manipulation to display player moves and results.
+ * - Integration of game logic for RPS simulation.
+ ***************************************************************************/
+
+
 package jGames.RPS;
 
 import javax.swing.*;
@@ -24,6 +54,28 @@ class GUI {
     Integer wintIntervalDelay, wintStopAtTrial;
     int intTrial;
 
+
+    /**********************************************************************
+     * Method name:
+     * initGUI
+     *
+     * Description:
+     * This method initializes the main JFrame window and sets up the basic layout
+     * of the application window. It also calls the `initConfigPanel()` method to
+     * initialize and display the configuration panel for the user to set up the game.
+     *
+     * Parameters:
+     * None
+     *
+     * Parameter Restrictions:
+     * No restrictions
+     *
+     * Return:
+     * None
+     *
+     * Return Restrictions:
+     * No restrictions
+     **********************************************************************/
     void initGUI() {
         frmMain = new JFrame("GameTest™");
         frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,6 +87,28 @@ class GUI {
         frmMain.setVisible(true);
     }
 
+    /**********************************************************************
+     * Method name:
+     * initConfigPanel
+     *
+     * Description:
+     * This method initializes and configures the components for the configuration panel.
+     * It sets up labels, buttons, text fields, and checkboxes for game options like
+     * player strategies, speed, duration, and statistics to track during the game.
+     * It also includes action listeners for handling user input and setting values.
+     *
+     * Parameters:
+     * None
+     *
+     * Parameter Restrictions:
+     * No restrictions
+     *
+     * Return:
+     * None
+     *
+     * Return Restrictions:
+     * No restrictions
+     **********************************************************************/
     private void initConfigPanel() {
         pnlConfig = new JPanel();
         pnlConfig.setLayout(null);
@@ -126,6 +200,13 @@ class GUI {
 
         });
 
+        /*
+         * This action listener method handles the logic when the "Start" button is clicked.
+         * It first validates the speed and trial input fields to ensure the values are valid.
+         * Then, it sets the game simulation parameters (player strategies, stats to track, etc.)
+         * and starts the game simulation. It initializes the simulation panel and begins
+         * the timer to run the simulation.
+         */
         btnStart.addActionListener(e -> {
 
             // First, validate and parse the speed input
@@ -210,7 +291,7 @@ class GUI {
 
             tmrWinRates.start();
 
-        });
+        }); /* End of button event handler */
 
         btnExit.addActionListener(e -> System.exit(0));
 
@@ -236,15 +317,77 @@ class GUI {
         pnlConfig.add(txtSpeed);
     }
 
+    /**********************************************************************
+     * Method name:
+     * getMoveAsString
+     *
+     * Description:
+     * This method takes an integer value representing a player's move (0, 1, or 2)
+     * and returns a string corresponding to that move. It converts the integer
+     * value into a human-readable string such as "Rock", "Paper", or "Scissors".
+     * If the integer value is not recognized (i.e., not 0, 1, or 2), it returns "Unknown".
+     *
+     * Parameters:
+     * Integer move: The integer value representing the player's move.
+     *               Possible values are 0 for Rock, 1 for Paper, and 2 for Scissors.
+     *
+     * Parameter Restrictions:
+     * The move should be a valid integer (0, 1, or 2). Any other value will return "Unknown".
+     *
+     * Return:
+     * String: The string representation of the move corresponding to the integer.
+     *         Returns "Rock", "Paper", "Scissors", or "Unknown" if the value is invalid.
+     *
+     * Return Restrictions:
+     * The return value will always be a string.
+     **********************************************************************/
     private String getMoveAsString(Integer move) {
+
+        /*
+         * This enhanced switch statement maps the provided integer move to its corresponding string representation.
+         * - Case 0: Returns "Rock" for move 0.
+         * - Case 1: Returns "Paper" for move 1.
+         * - Case 2: Returns "Scissors" for move 2.
+         * - Default: Returns "Unknown" for any invalid move value.
+         */
         return switch (move) {
             case 0 -> "Rock";
             case 1 -> "Paper";
             case 2 -> "Scissors";
             default -> "Unknown";
-        };
+        }; /* end of Enhanced Switch */
     }
 
+    /**********************************************************************
+     * Method name:
+     * updateWinRateDisplays
+     *
+     * Description:
+     * This method updates the win rate display for both players during the
+     * simulation. It calculates the win rates of both players as percentages
+     * based on the total win rates, then updates a progress bar and labels to
+     * visually represent the win rate of each player. The progress bar's
+     * direction is set based on which player has a higher win rate, and the
+     * color of the progress bar is also adjusted accordingly. The win rates
+     * for both players are displayed in the corresponding labels in percentage
+     * format.
+     *
+     * Parameters:
+     * double playerAWinRate: The win rate of Player A, represented as a decimal
+     *                         (e.g., 0.75 for 75%).
+     * double playerBWinRate: The win rate of Player B, represented as a decimal
+     *                         (e.g., 0.60 for 60%).
+     *
+     * Parameter Restrictions:
+     * Both parameters should be valid win rates as decimals, where values range
+     * from 0.0 (0%) to 1.0 (100%).
+     *
+     * Return:
+     * None
+     *
+     * Return Restrictions:
+     * No return value. This method updates the GUI components.
+     **********************************************************************/
     private void updateWinRateDisplays(double playerAWinRate, double playerBWinRate) {
         if (frmMain == null || pbWinRates == null) return; // Safety check
 
@@ -253,6 +396,12 @@ class GUI {
         int progressA = (int) Math.round((playerAWinRate / totalWinRate) * 100);
         int progressB = (int) Math.round((playerBWinRate / totalWinRate) * 100);
 
+        /*
+         * This if-else statement adjusts the progress bar's display based on which player has the higher win rate.
+         * - If Player A has a higher win rate, the progress bar's direction is set to left-to-right and the color is set to red.
+         * - If Player B has a higher win rate, the progress bar's direction is set to right-to-left and the color is set to blue.
+         * This ensures the visual representation matches the player's performance.
+         */
         if (playerAWinRate > playerBWinRate) {
             // Player A has a higher win rate, set progress to grow left-to-right
             pbWinRates.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -263,7 +412,7 @@ class GUI {
             pbWinRates.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
             pbWinRates.setValue(progressB); // Set the progress as Player B's win rate
             pbWinRates.setForeground(Color.BLUE); // Color for Player B (example)
-        }
+        } /* end of if-else block */
 
         lblWinRateA.setText("<html><h1>" + progressA + "%</h1></html>");
         lblWinRateB.setText("<html><h1>" + progressB + "%</h1></html>");
@@ -272,6 +421,29 @@ class GUI {
         pbWinRates.repaint();
     }
 
+    /**********************************************************************
+     * Method name:
+     * initSimulationPanel
+     *
+     * Description:
+     * This method initializes and sets up the graphical user interface (GUI) for the simulation panel.
+     * It creates the necessary components such as labels, buttons, and progress bars to display simulation data.
+     * It also defines the layout and positions for each component within the panel.
+     * Additionally, it adds action listeners for the "Pause" and "End Game" buttons to control the flow of the simulation.
+     * The method finishes by adding all components to the simulation panel for display.
+     *
+     * Parameters:
+     * None
+     *
+     * Parameter Restrictions:
+     * No restrictions
+     *
+     * Return:
+     * None
+     *
+     * Return Restrictions:
+     * No restrictions
+     **********************************************************************/
     private void initSimulationPanel() {
         pnlSimulation = new JPanel();
         pnlSimulation.setLayout(null);
@@ -306,6 +478,12 @@ class GUI {
         btnPause.setBounds(150, 270, 100, 30);
         //pbWinRates.setStringPainted(true);
 
+        /*
+         * This action listener is attached to the "Pause" button.
+         * - If the button's text is "Pause", it stops the win rate timer and changes the text to "Resume".
+         * - If the button's text is "Resume", it starts the win rate timer and changes the text back to "Pause".
+         * This controls the simulation's pause/resume functionality.
+         */
         btnPause.addActionListener(e -> {
 
             if (btnPause.getText().equals("Pause")) {
@@ -320,7 +498,7 @@ class GUI {
 
             }
 
-        });
+        });/* end of event handler code block */
 
         btnEndTest.addActionListener(e -> {
 
@@ -333,6 +511,11 @@ class GUI {
 
         });
 
+        /*
+         * This line enables or disables the "End Game" button based on the value of wintStopAtTrial.
+         * - If wintStopAtTrial is not null, the "End Game" button is disabled (until all trials are completed).
+         * - If wintStopAtTrial is null, the button remains enabled (since null means endless).
+         */
         btnEndTest.setEnabled(wintStopAtTrial == null);
 
         pnlSimulation.add(lblTitle);
